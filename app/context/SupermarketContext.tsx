@@ -36,7 +36,7 @@ export const SupermarketProvider: React.FC<{ children: ReactNode }> = ({ childre
         }
 
         try {
-            const response = await axios.get<SupermarketDetails>(`http://localhost:8080/supermarket/${supermarketId}`, {
+            const response = await axios.get<SupermarketDetails>(`${process.env.NEXT_PUBLIC_API_URL}/supermarket/${supermarketId}`, {
                 headers: {
                     'Authorization': `Bearer ${user?._id}`,
                 },

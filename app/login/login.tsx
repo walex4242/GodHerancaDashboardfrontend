@@ -57,6 +57,7 @@ const Login = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Accept': 'application/json',
                 },
                 credentials: 'include',
                 body: JSON.stringify({ email, password }),
@@ -94,7 +95,7 @@ const Login = () => {
     const handleGoogleSuccess = async (response: any) => {
         try {
             const { credential } = response;
-            const googleResponse = await fetch('http://localhost:8080/oauth/google/callback', { // Adjusted to /oauth
+            const googleResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/oauth/google/callback`, { // Adjusted to /oauth
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -46,7 +46,7 @@ export const LoginProvider = ({ children }: { children: ReactNode }) => {
     // Function to handle login
     const login = async (email: string, password: string) => {
         try {
-            const response = await fetch('http://localhost:8080/auth/login', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ export const LoginProvider = ({ children }: { children: ReactNode }) => {
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/users/${user._id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user._id}`, {
                 method: 'PATCH',
                 body: data,
                 credentials: 'include', // Ensure cookies are included with the request
@@ -112,7 +112,7 @@ export const LoginProvider = ({ children }: { children: ReactNode }) => {
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/users/${user._id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user._id}`, {
                 method: 'PATCH',
                 body: JSON.stringify({ password }),
                 credentials: 'include', // Ensure cookies are included with the request
@@ -143,7 +143,7 @@ export const LoginProvider = ({ children }: { children: ReactNode }) => {
         formData.append('profilePicture', picture);
 
         try {
-            const response = await fetch(`http://localhost:8080/users/${user._id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user._id}`, {
                 method: 'PATCH',
                 body: formData,
                 credentials: 'include', // Ensure cookies are included with the request
@@ -170,7 +170,7 @@ export const LoginProvider = ({ children }: { children: ReactNode }) => {
             if (!user || !user._id) return;
 
             try {
-                const response = await fetch(`http://localhost:8080/users/${user._id}`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user._id}`, {
                     method: 'GET',
                     credentials: 'include', // Include cookies with the request
                 });

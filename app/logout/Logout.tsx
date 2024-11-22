@@ -8,12 +8,7 @@ const Logout = () => {
 
     const handleLogout = async () => {
         try {
-            // Dispatch action to clear user and token from Redux state
             dispatch(clearUser());
-            // Optionally, you could make a request to your API to clear the server-side session
-            // await fetch('/api/logout', { method: 'POST' });
-
-            // Redirect to home after logout
             router.push('/');
         } catch (err) {
             console.error('Logout failed:', err);

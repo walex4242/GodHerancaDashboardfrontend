@@ -52,42 +52,21 @@ const Signup = () => {
     const [success, setSuccess] = useState('');
     const router = useRouter();
 
-    // const onSubmit: SubmitHandler<SignupFormInputs> = async (data) => {
-    //     try {
-    //         const addressArray = data.address.split(',').map(addr => addr.trim());
-    //         const registrationData = { ...data, address: addressArray };
-
-    //         const registrationResponse = await axios.post('http://localhost:8080/auth/register', registrationData);
-    //         if (registrationResponse.status === 201) {
-    //             setSuccess('Registration successful! You can now log in.');
-    //             setError('');
-    //         } else {
-    //             setError('Registration failed. Please try again.');
-    //         }
-    //     } catch (err: unknown) {
-    //         if (axios.isAxiosError(err)) {
-    //             if (err.response) {
-    //                 setError(`Registration failed: ${err.response.data.message || 'Please try again.'}`);
-    //             } else if (err.request) {
-    //                 setError('No response from the server. Please try again.');
-    //             } else {
-    //                 setError(`Error: ${err.message}`);
-    //             }
-    //         } else if (err instanceof Error) {
-    //             setError(`Error: ${err.message}`);
-    //         } else {
-    //             setError('An unexpected error occurred. Please try again.');
-    //         }
-    //     }
-    // };
-
-
     const onSubmit: SubmitHandler<SignupFormInputs> = async (data) => {
         try {
             const addressArray = data.address.split(',').map(addr => addr.trim());
             const registrationData = { ...data, address: addressArray };
+            const headers = {
+                'Content-Type': 'application/json',
+                'Custom-Header': 'YourCustomValue', // Add your custom header values here
+                'Authorization': `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}` // Example if you use an API token
+            };
 
-            const registrationResponse = await axios.post('http://localhost:8080/auth/register', registrationData);
+            const registrationResponse = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, registrationData, { 
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+             });
             if (registrationResponse.status === 201) {
                 setSuccess('Registration successful! A verification email has been sent to your inbox.');
                 setError('');
@@ -117,7 +96,7 @@ const Signup = () => {
     const onSuccess = async (response: any) => {
         try {
             const { credential } = response;  // Assuming the token is in 'credential'
-            const googleResponse = await axios.post('http://localhost:8080/oauth/google', { token: credential });
+            const googleResponse = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/oauth/google`, { token: credential });
             if (googleResponse.status === 200) {
                 setSuccess('Google Sign-In successful! You can now log in.');
                 setError('');

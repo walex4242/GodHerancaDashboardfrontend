@@ -72,7 +72,7 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 formData.append('imageUrl', image);
             }
 
-            await axios.post<Item>(`http://localhost:8080/item/${supermarketId}`, formData, {
+            await axios.post<Item>(`${process.env.NEXT_PUBLIC_API_URL}/item/${supermarketId}`, formData, {
                 headers: {
                     'Authorization': `Bearer ${user?._id}`,
                     'Content-Type': 'multipart/form-data',
@@ -90,7 +90,7 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const fetchItemById = async (id: string): Promise<Item | null> => {
         try {
-            const response = await axios.get<Item>(`http://localhost:8080/item/${id}`, {
+            const response = await axios.get<Item>(`${process.env.NEXT_PUBLIC_API_URL}/item/${id}`, {
                 headers: {
                     Authorization: `Bearer ${user?._id}`,
                 },
@@ -110,7 +110,7 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
 
         try {
-            const response = await axios.get<Item[]>(`http://localhost:8080/supermarket/${supermarketId}/items`, {
+            const response = await axios.get<Item[]>(`${process.env.NEXT_PUBLIC_API_URL}/supermarket/${supermarketId}/items`, {
                 headers: {
                     'Authorization': `Bearer ${user?._id}`,
                 },
@@ -126,7 +126,7 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const fetchItemsByCategory = async (categoryId: string): Promise<Item[]> => {
         try {
-            const response = await axios.get<Item[]>(`http://localhost:8080/category/${categoryId}/items`, {
+            const response = await axios.get<Item[]>(`${process.env.NEXT_PUBLIC_API_URL}/category/${categoryId}/items`, {
                 headers: {
                     Authorization: `Bearer ${user?._id}`,
                 },
@@ -170,7 +170,7 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             console.log('FormData content:', Array.from(formData.entries()));
 
             // Make PATCH request to update item
-            const response = await axios.patch(`http://localhost:8080/item/${id}`, formData, {
+            const response = await axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/item/${id}`, formData, {
                 headers: {
                     'Authorization': `Bearer ${user._id}`, // Ensure correct token
                     'Content-Type': 'multipart/form-data',
@@ -203,7 +203,7 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
 
         try {
-            await axios.delete(`http://localhost:8080/item/${id}`, {
+            await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/item/${id}`, {
                 headers: {
                     'Authorization': `Bearer ${user?._id}`,
                     'Content-Type': 'multipart/form-data',

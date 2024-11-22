@@ -35,7 +35,7 @@ export const CategoryProvider: React.FC<{ children: ReactNode }> = ({ children }
         setLoading(true);
         setError(null);
         try {
-            const response = await axios.get<Category[]>(`http://localhost:8080/supermarket/${supermarketId}/categories`, {
+            const response = await axios.get<Category[]>(`${process.env.NEXT_PUBLIC_API_URL}/supermarket/${supermarketId}/categories`, {
                 headers: {
                     'Authorization': `Bearer ${user?._id}`,
                     'Accept': 'application/json',
@@ -79,7 +79,7 @@ export const CategoryProvider: React.FC<{ children: ReactNode }> = ({ children }
                 formData.append('parentCategory', parentCategoryId);
             }
 
-            await axios.post(`http://localhost:8080/category/${supermarketId}`, formData, {
+            await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/category/${supermarketId}`, formData, {
                 headers: {
                     'Authorization': `Bearer ${user._id}`,
                     'Content-Type': 'multipart/form-data',
@@ -104,7 +104,7 @@ export const CategoryProvider: React.FC<{ children: ReactNode }> = ({ children }
         setLoading(true);  // Set loading to true before making the API call
 
         try {
-            await axios.patch(`http://localhost:8080/category/${id}`, formData, {
+            await axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/category/${id}`, formData, {
                 headers: {
                     'Authorization': `Bearer ${user._id}`,
                     'Content-Type': 'multipart/form-data',
@@ -130,7 +130,7 @@ export const CategoryProvider: React.FC<{ children: ReactNode }> = ({ children }
         setLoading(true);  // Set loading to true before making the API call
 
         try {
-            await axios.delete(`http://localhost:8080/category/${id}`, {
+            await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/category/${id}`, {
                 headers: {
                     'Authorization': `Bearer ${user._id}`,
                     'Accept': 'application/json',
