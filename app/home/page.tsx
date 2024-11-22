@@ -14,7 +14,7 @@ const HomePage: React.FC = () => {
 
             <div className="mt-8 flex justify-center">
                 <Image
-                    src="/public/godheranca.png" // Replace with your actual image
+                    src="/assets/godheranca.png" // Replace with your actual image
                     alt="Supermarket Dashboard"
                     width={500}
                     height={300}
