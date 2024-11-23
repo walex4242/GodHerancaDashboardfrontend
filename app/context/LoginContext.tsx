@@ -29,7 +29,7 @@ interface LoginContextType {
     isAuthenticated: boolean;
     user: User | null;
     updateUser: (data: FormData) => Promise<void>;
-    updatePassword: (password: string) => Promise<void>;
+    updatePassword: (currentPassword: string, newPassword: string) => Promise<void>;
     updateProfilePicture: (picture: File) => Promise<void>;
     login: (email: string, password: string) => Promise<void>;
     logout: () => void;
@@ -105,7 +105,35 @@ export const LoginProvider = ({ children }: { children: ReactNode }) => {
     };
 
     // Function to update the user's password
-    const updatePassword = async (password: string) => {
+    // const updatePassword = async (password: string) => {
+    //     if (!user || !user._id) {
+    //         console.error('User ID is not available');
+    //         return;
+    //     }
+
+    //     try {
+    //         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user._id}`, {
+    //             method: 'PATCH',
+    //             body: JSON.stringify({ password }),
+    //             credentials: 'include', // Ensure cookies are included with the request
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'Accept': 'application/json',
+    //             },
+    //         });
+
+    //         if (!response.ok) {
+    //             const errorText = await response.text();
+    //             throw new Error(errorText);
+    //         }
+
+    //         console.log('Password updated successfully');
+    //     } catch (error) {
+    //         console.error('Failed to update password:', error);
+    //     }
+    // };
+
+    const updatePassword = async (currentPassword: string, newPassword: string) => {
         if (!user || !user._id) {
             console.error('User ID is not available');
             return;
@@ -114,7 +142,7 @@ export const LoginProvider = ({ children }: { children: ReactNode }) => {
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user._id}`, {
                 method: 'PATCH',
-                body: JSON.stringify({ password }),
+                body: JSON.stringify({ currentPassword, newPassword }),
                 credentials: 'include', // Ensure cookies are included with the request
                 headers: {
                     'Content-Type': 'application/json',
@@ -132,6 +160,7 @@ export const LoginProvider = ({ children }: { children: ReactNode }) => {
             console.error('Failed to update password:', error);
         }
     };
+
 
     const updateProfilePicture = async (picture: File) => {
         if (!user || !user._id) {

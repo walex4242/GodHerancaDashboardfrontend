@@ -22,6 +22,9 @@ const Settings = () => {
     const [userSettings, setUserSettings] = useState<UserSetting[]>(mockSettings);
     const [saveStatus, setSaveStatus] = useState<string | null>(null);
     const [passwordError, setPasswordError] = useState<string | null>(null);
+    const [currentPassword, setCurrentPassword] = useState<string>('');
+    const [newPassword, setNewPassword] = useState<string>('');
+    const [confirmPassword, setConfirmPassword] = useState<string>('');
 
     const handleToggleChange = (index: number) => {
         const settingsCopy = [...userSettings];
@@ -39,20 +42,31 @@ const Settings = () => {
         setSaveStatus(t('saving'));
         setPasswordError(null);
 
+        // Password validation logic
+        if (newPassword !== confirmPassword) {
+            setPasswordError(t('passwordsDoNotMatch'));
+            setSaveStatus(null);
+            return;
+        }
+
+        if (newPassword.length < 6) {
+            setPasswordError(t('passwordTooShort'));
+            setSaveStatus(null);
+            return;
+        }
+
         // Handle password update
-        const passwordSetting = userSettings.find(setting => setting.label === "password");
-        if (passwordSetting && passwordSetting.value) {
+        if (currentPassword && newPassword) {
             try {
-                await updatePassword(passwordSetting.value as string);
+                await updatePassword(currentPassword, newPassword); // Assuming the updatePassword method accepts both current and new passwords
                 setSaveStatus(t('saved'));
+                setCurrentPassword('');
+                setNewPassword('');
+                setConfirmPassword('');
             } catch (error) {
                 setPasswordError(t('passwordUpdateError'));
                 setSaveStatus(null);
             }
-        } else {
-            setTimeout(() => {
-                setSaveStatus(t('saved'));
-            }, 1000);
         }
     };
 
@@ -100,21 +114,36 @@ const Settings = () => {
                                             />
                                             <div
                                                 className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-black-300 peer-focus:ring-4 
-                                                transition peer-checked:after:translate-x-full peer-checked:after:border-white 
-                                                after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white 
-                                                after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all
-                                                peer-checked:bg-black-300"
+                        transition peer-checked:after:translate-x-full peer-checked:after:border-white 
+                        after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white 
+                        after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all
+                        peer-checked:bg-black-300"
                                             ></div>
                                         </label>
                                     ) : setting.type === "password" ? (
-                                        <label className="inline-flex relative items-center cursor-pointer">
+                                        <div className="space-y-2">
+                                            <input
+                                                type="password"
+                                                className="w-full px-4 py-2 border rounded-lg text-gray-500 focus:outline-none focus:border-gray-500"
+                                                placeholder={t('Enter Current Password')}
+                                                value={currentPassword}
+                                                onChange={(e) => setCurrentPassword(e.target.value)}
+                                            />
                                             <input
                                                 type="password"
                                                 className="w-full px-4 py-2 border rounded-lg text-gray-500 focus:outline-none focus:border-gray-500"
                                                 placeholder={t('Enter New Password')}
-                                                onChange={(e) => handleTextChange(index, e.target.value)}
+                                                value={newPassword}
+                                                onChange={(e) => setNewPassword(e.target.value)}
                                             />
-                                        </label>
+                                            <input
+                                                type="password"
+                                                className="w-full px-4 py-2 border rounded-lg text-gray-500 focus:outline-none focus:border-gray-500"
+                                                placeholder={t('Confirm New Password')}
+                                                value={confirmPassword}
+                                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                            />
+                                        </div>
                                     ) : (
                                         <input
                                             type="text"
