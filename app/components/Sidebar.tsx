@@ -23,6 +23,9 @@ interface SidebarLinkProps {
     isCollapsed: boolean;
 }
 
+interface SidebarProps {
+    isSidebarVisibled: boolean;
+}
 const SidebarLink = ({
     href,
     icon: Icon,

@@ -16,9 +16,6 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
     const isSidebarCollapsed = useAppSelector(
         (state: RootState) => state.global.isSidebarCollapsed
     );
-    const isDarkMode = useAppSelector(
-        (state: RootState) => state.global.isDarkMode
-    );
 
     const [isMounted, setIsMounted] = useState(false);
     const { isAuthenticated, logout, user } = useLogin();
@@ -31,23 +28,6 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
     const toggleSidebar = () => {
         dispatch(setIsSidebarCollapsed(!isSidebarCollapsed));
     };
-
-    const toggleDarkMode = () => {
-        dispatch(setIsDarkMode(!isDarkMode));
-    };
-
-    useEffect(() => {
-        if (isMounted) {
-            const htmlElement = document.documentElement;
-            if (isDarkMode) {
-                htmlElement.classList.add("dark");
-                htmlElement.classList.remove("light");
-            } else {
-                htmlElement.classList.add("light");
-                htmlElement.classList.remove("dark");
-            }
-        }
-    }, [isDarkMode, isMounted]);
 
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
@@ -82,10 +62,7 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
             </div>
 
             {/* Right Section */}
-            <div className="flex justify-end items-center gap-5 ml-auto">
-                {/* <button onClick={toggleDarkMode} className="text-gray-500 dark:text-gray-300">
-                    {isDarkMode ? <Sun size={24} /> : <Moon size={24} />}
-                </button> */}
+            <div className="flex justify-end items-center gap-5 ml-auto ">
                 <div className="relative">
                     <button onClick={toggleDropdown} className="flex items-center gap-2 cursor-pointer">
                         {isAuthenticated && user ? (
@@ -100,7 +77,7 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
                                 />
                             </div>
                         ) : (
-                            <FaUserCircle size={40} className="text-gray-500 dark:text-gray-300" />
+                            <FaUserCircle size={30} className="text-gray-500 dark:text-gray-300" />
                         )}
                     </button>
                     {isDropdownOpen && (
@@ -148,7 +125,7 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
 
                 {isAuthenticated && (
                     <Link href="/settings">
-                        <FaCog size={40} className="text-2xl cursor-pointer text-gray-500 dark:text-gray-300" title="Settings" />
+                        <FaCog size={30} className="text-2xl cursor-pointer text-gray-500 dark:text-gray-300" title="Settings" />
                     </Link>
                 )}
             </div>
