@@ -5,6 +5,7 @@ import { useCategory } from '../context/CategoryContext';
 import { useLogin } from '../context/LoginContext';
 import CategoryForm from './CategoryModal';
 import { useSupermarket } from '../context/SupermarketContext';
+import { EditIcon, PlusCircleIcon, Trash2Icon } from 'lucide-react';
 
 const CategoriesPage = () => {
     const { isAuthenticated, user } = useLogin();
@@ -137,15 +138,15 @@ const CategoriesPage = () => {
             <div className="mt-4 flex justify-around">
                 <button
                     onClick={() => handleEdit(category)}
-                    className="bg-gray-300 hover:bg-gray-600 text-white px-4 py-2 rounded"
+                    className="flex items-center bg-gray-600 hover:bg-black text-white font-bold py-2 px-4 rounded-lg"
                 >
-                    Edit
+                    <EditIcon className="w-5 h-5 mr-2" /> Edit
                 </button>
                 <button
                     onClick={() => handleDelete(category._id)}
-                    className="bg-black-300 text-white px-4 py-2 rounded"
+                    className="flex items-center bg-gray-600 hover:bg-black text-white font-bold py-2 px-4 rounded-lg"
                 >
-                    Delete
+                    <Trash2Icon className="w-5 h-5 mr-2" /> Delete
                 </button>
             </div>
         </div>
@@ -158,24 +159,27 @@ const CategoriesPage = () => {
     }
 
     return (
-        <div>
-            <div className="flex justify-between items-center mb-6">
+        <div className="container mx-auto p-6 bg-gray-50 min-h-screen">
+            <div className="mb-6 flex justify-center">
                 <input
                     type="text"
                     placeholder="Search categories..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="border p-2 w-1/2"
+                    className="w-full max-w-lg py-2 px-4 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-black"
                 />
+            </div>
+            <div className="flex justify-between items-center mb-6">
+                <h2 className="text-3xl font-bold text-gray-800">Categories</h2>
                 <button
                     onClick={handleCreate}
-                    className="bg-gray-500 hover:bg-black-300 focus:ring text-white px-4 py-2 rounded"
+                    className="flex items-center bg-gray-400 hover:bg-black text-white font-bold py-2 px-4 rounded-lg"
                 >
-                    Add Category
+                    <PlusCircleIcon className="w-5 h-5 mr-2" /> Create Category
                 </button>
             </div>
-            {/* {loading && <p>Loading...</p>}
-            {error && <p className="text-red-500">{error}</p>} */}
+            {loading && <p>Loading...</p>}
+            {error && <p className="text-red-500">{error}</p>}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredCategories.map(renderCategory)}
             </div>

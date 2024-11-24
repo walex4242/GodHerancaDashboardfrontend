@@ -99,7 +99,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
             <div className="flex space-x-4">
                 <button
                     type="submit"
-                    className="bg-black-500 text-white px-4 py-2 rounded"
+                    className="bg-gray-500 hover:bg-black text-white px-4 py-2 rounded-xl"
                     disabled={loading} // Disable button while saving
                 >
                     {loading ? 'Saving...' : 'Save'} {/* Show "Saving..." when loading */}
@@ -107,7 +107,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
                 <button
                     type="button"
                     onClick={onCancel}
-                    className="bg-gray-500 text-white px-4 py-2 rounded"
+                    className="bg-gray-500 hover:bg-black text-white px-4 py-2 rounded-xl"
                     disabled={loading} // Disable cancel button while saving
                 >
                     Cancel

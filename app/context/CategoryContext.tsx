@@ -59,9 +59,16 @@ export const CategoryProvider: React.FC<{ children: ReactNode }> = ({ children }
         }
     };
 
+    const clearCategory = () => {
+        setCategories([]);
+        setLoading(false); // Ensure loading is reset when clearing items
+    };
+
     useEffect(() => {
-        if (isAuthenticated && supermarketId) {
-            fetchCategories();
+        if (!isAuthenticated && !supermarketId && !user) {
+            clearCategory()
+        } else {
+            fetchCategories(); 
         }
         // Only run when user authentication state or supermarketId changes
     }, [isAuthenticated, supermarketId]);

@@ -30,6 +30,8 @@ const Inventory = () => {
     const { supermarketId } = useSupermarket();
     const [isInitialLoad, setIsInitialLoad] = useState(true);
     const router = useRouter();
+    
+
 
     const fetchItems = useCallback(async () => {
         if (supermarketId) {
@@ -46,7 +48,7 @@ const Inventory = () => {
     }, [isAuthenticated, router]);
 
     useEffect(() => {
-        if (isAuthenticated && supermarketId && isInitialLoad) {
+        if (isAuthenticated && user && supermarketId && isInitialLoad) {
             fetchItems().then(() => setIsInitialLoad(false));
         }
     }, [isAuthenticated, supermarketId, fetchItems, isInitialLoad]);

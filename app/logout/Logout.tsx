@@ -1,6 +1,7 @@
 import { useDispatch } from 'react-redux';
 import { clearUser } from '../state/authSlice';
 import { useRouter } from 'next/router';
+import { useItem } from '../context/ItemContext';
 
 const Logout = () => {
     const dispatch = useDispatch();

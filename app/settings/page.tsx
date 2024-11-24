@@ -12,13 +12,13 @@ type UserSetting = {
 
 const mockSettings: UserSetting[] = [
     { label: "notification", value: true, type: "toggle" },
-    { label: "darkMode", value: false, type: "toggle" },
+    // { label: "darkMode", value: false, type: "toggle" },
     { label: "password", value: '', type: "password" },
 ];
 
 const Settings = () => {
     const { t, i18n } = useTranslation();
-    const { updatePassword } = useLogin(); // Destructure the updatePassword function
+    const { updatePassword, isAuthenticated, user } = useLogin(); // Destructure the updatePassword function
     const [userSettings, setUserSettings] = useState<UserSetting[]>(mockSettings);
     const [saveStatus, setSaveStatus] = useState<string | null>(null);
     const [passwordError, setPasswordError] = useState<string | null>(null);
@@ -81,6 +81,12 @@ const Settings = () => {
             setUserSettings(settingsCopy);
         }
     };
+
+    if (!isAuthenticated || !user) {
+        return (
+            <p className='text-center justify-center text-black'> You do not have permission to view this page. </p>
+        )
+    }
 
     return (
         <div className="w-full px-4 py-6 sm:px-6 md:px-8 lg:px-10">

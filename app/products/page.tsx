@@ -79,7 +79,7 @@ const Products = () => {
             {/* SEARCH BAR */}
             <div className="mb-6 flex justify-center">
                 <input
-                    className="w-full max-w-lg py-2 px-4 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full max-w-lg py-2 px-4 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-black"
                     placeholder="Search products..."
                     value={searchTerm} // Ensure value is never undefined
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -90,7 +90,7 @@ const Products = () => {
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-3xl font-bold text-gray-800">Products</h2>
                 <button
-                    className="flex items-center bg-gray-300 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded-lg"
+                    className="flex items-center bg-gray-300 hover:bg-black text-white font-bold py-2 px-4 rounded-lg"
                     onClick={() => {
                         setEditingProduct(null); // Clear editing state when creating a new product
                         setIsModalOpen(true);
@@ -162,13 +162,13 @@ const Products = () => {
                                 )}
                                 <div className="flex space-x-3">
                                     <button
-                                        className="flex items-center bg-gray-400 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg"
+                                        className="flex items-center bg-gray-600 hover:bg-black text-white font-bold py-2 px-4 rounded-lg"
                                         onClick={() => handleEditProduct(product)}
                                     >
                                         <EditIcon className="w-5 h-5 mr-2" /> Edit
                                     </button>
                                     <button
-                                        className="flex items-center bg-gray-700 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded-lg"
+                                        className="flex items-center bg-gray-600 hover:bg-black text-white font-bold py-2 px-4 rounded-lg"
                                         onClick={() => handleDeleteProduct(product._id)}
                                     >
                                         <Trash2Icon className="w-5 h-5 mr-2" /> Delete

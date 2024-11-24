@@ -32,6 +32,7 @@ interface ItemContextType {
     fetchItemsByCategory: (categoryId: string) => Promise<Item[]>;
     updateItem: (id: string, updatedItem: Partial<Item>, image?: File) => Promise<void>;
     deleteItem: (id: string) => Promise<void>;
+    clearItems: () => void;
 }
 
 const ItemContext = createContext<ItemContextType | undefined>(undefined);
@@ -40,12 +41,22 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [items, setItems] = useState<Item[]>([]);
     const { user, isAuthenticated } = useLogin();
     const { supermarketId } = useSupermarket();
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        if (isAuthenticated && supermarketId) {
-            fetchItemsBySupermarket();
+        if (!isAuthenticated || !supermarketId || !user) {
+            clearItems(); // Clear items immediately if the user is logged out
+        } else {
+            fetchItemsBySupermarket(); // Fetch items for the current supermarket/user
         }
-    }, [isAuthenticated, supermarketId]);
+    }, [isAuthenticated, supermarketId, user]);
+
+    // useEffect(() => {
+    //     console.log("isAuthenticated or supermarketId changed", { isAuthenticated, supermarketId });
+    //     if (isAuthenticated && supermarketId && user) {
+    //         fetchItemsBySupermarket();
+    //     } 
+    // }, [isAuthenticated, supermarketId, user]);
 
     const createItem = async (item: Partial<Item>, image: File) => {
         if (!user || !isAuthenticated) {
@@ -103,12 +114,19 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     };
 
+    const clearItems = () => {
+        setItems([]);
+        setLoading(false); // Ensure loading is reset when clearing items
+    };
+
     const fetchItemsBySupermarket = async (): Promise<Item[]> => {
-        if (!supermarketId) {
+        if (!user || !isAuthenticated || !supermarketId) {
             console.error('Supermarket ID is not available');
+            clearItems();
             return [];
         }
 
+        setLoading(true); // Start loading before fetching
         try {
             const response = await axios.get<Item[]>(`${process.env.NEXT_PUBLIC_API_URL}/supermarket/${supermarketId}/items`, {
                 headers: {
@@ -116,13 +134,23 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 },
                 withCredentials: true,
             });
-            setItems(response.data);
+
+            if (response.data.length === 0) {
+                clearItems();
+            } else {
+                setItems(response.data);
+            }
+
             return response.data;
         } catch (error) {
             console.error('Error fetching items by supermarket:', error);
+            clearItems();
             return [];
+        } finally {
+            setLoading(false); // Stop loading after fetching
         }
     };
+
 
     const fetchItemsByCategory = async (categoryId: string): Promise<Item[]> => {
         try {
@@ -227,6 +255,7 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 fetchItemsByCategory,
                 updateItem,
                 deleteItem,
+                clearItems
             }}
         >
             {children}

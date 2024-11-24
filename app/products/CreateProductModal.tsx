@@ -233,16 +233,16 @@ const CreateProductModal: React.FC<CreateProductModalProps> = ({ isOpen, onClose
                                 ...prev,
                                 quantityOffers: [...(prev.quantityOffers || []), { quantity: 1, price: 0 }]
                             }))}
-                            className="bg-blue-500 text-white px-4 py-2 rounded"
+                            className="bg-gray-500 hover:bg-black text-white px-4 py-2 rounded"
                         >
                             Add Quantity Offer
                         </button>
                     </div>
                     <div className="flex justify-end space-x-4">
-                        <button type="button" onClick={handleClose} className="bg-gray-500 text-white px-4 py-2 rounded">
+                        <button type="button" onClick={handleClose} className="bg-gray-500 hover:bg-black text-white px-4 py-2 rounded">
                             Cancel
                         </button>
-                        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+                        <button type="submit" className="bg-gray-500 hover:bg-black text-white px-4 py-2 rounded">
                             {editingProduct ? "Update Product" : "Create Product"}
                         </button>
                     </div>
