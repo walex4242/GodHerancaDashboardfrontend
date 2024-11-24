@@ -5,7 +5,7 @@ import { useLogin } from '../context/LoginContext';
 import { useDispatch } from 'react-redux';
 import { setUser, setToken, clearUser, clearToken } from '../state/authSlice';
 import Link from 'next/link';
-import { GoogleLogin } from '@react-oauth/google'; // Import GoogleLogin component
+
 
 const Login = () => {
     const [email, setEmail] = useState<string>('');
@@ -91,33 +91,6 @@ const Login = () => {
         }
     };
 
-    // Frontend Google login route (ensure it matches your backend)
-    const handleGoogleSuccess = async (response: any) => {
-        try {
-            const { credential } = response;
-            const googleResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/oauth/google/callback`, { // Adjusted to /oauth
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ token: credential }),
-            });
-
-            if (!googleResponse.ok) {
-                throw new Error('Google sign-in failed');
-            }
-
-            const data = await googleResponse.json();
-            dispatch(setUser(data.user));
-            dispatch(setToken(data.token));
-            router.push('/inventory');
-        } catch (error) {
-            console.error(error);
-            setError('An error occurred during Google sign-in');
-        }
-    };
-
-
     return (
         <div className="flex justify-center items-start min-h-screen bg-white">
             <div className="p-8 rounded-lg shadow-md w-full max-w-md bg-white dark:bg-gray-800 mt-10">
@@ -134,7 +107,7 @@ const Login = () => {
                             required
                             disabled={loading}
                             className={`mt-1 block w-full px-3 py-2 border ${error && !validateEmail(email) ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-                                } rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100`}
+                                } rounded-md shadow-sm focus:outline-none focus:ring-gray-800 focus:border-gray-800 sm:text-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100`}
                         />
                     </div>
                     <div className="mb-4">
@@ -146,12 +119,12 @@ const Login = () => {
                             onChange={(e) => setPassword(e.target.value)}
                             required
                             disabled={loading}
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-gray-800 focus:border-gray-800 sm:text-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                         />
                     </div>
                     <button
                         type="submit"
-                        className={`w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 dark:bg-black-500 hover:bg-black-500 dark:hover:bg-black-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black-400 ${loading || !validateEmail(email) ? 'cursor-not-allowed opacity-50' : ''}`}
+                        className={`w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-400 dark:bg-gray-600 hover:bg-gray-800 dark:hover:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black-400 ${loading || !validateEmail(email) ? 'cursor-not-allowed opacity-50' : ''}`}
                         disabled={loading || !validateEmail(email)}
                     >
                         {loading ? 'Logging in...' : 'Login'}
@@ -160,13 +133,6 @@ const Login = () => {
                         <p className="text-sm">You don't have an account? <Link href="/signup" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300">Sign Up</Link></p>
                     </div>
                 </form>
-                {/* <div className="mt-6 text-center">
-                    <GoogleLogin
-                        onSuccess={handleGoogleSuccess}
-                        // promptMomentNotification={han}
-                        // onError={(error: { message: any; }) => setError(error.message || 'An error occurred during Google sign-in')}
-                    />
-                </div> */}
             </div>
         </div>
     );
