@@ -1,4 +1,6 @@
-"use client";
+"use client"
+import { useAppDispatch, useAppSelector } from "../redux";
+import { useState } from "react";
 import { setIsSidebarCollapsed } from "@/app/state";
 import {
     Archive,
@@ -12,8 +14,6 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useState } from "react";
-import { useAppDispatch, useAppSelector } from "../redux";
 import { useLogin } from "../context/LoginContext"; // Import the useLogin hook
 
 interface SidebarLinkProps {
@@ -41,7 +41,6 @@ const SidebarLink = ({
                     }`}
             >
                 <Icon className="w-6 h-6 !text-gray-700" />
-
                 <span
                     className={`${isCollapsed ? "hidden" : "block"
                         } font-medium text-gray-700`}
@@ -71,7 +70,7 @@ const Sidebar = () => {
 
     const sidebarClassNames = `fixed flex flex-col ${isSidebarCollapsed ? "w-16" : "w-64"
         } bg-white transition-all duration-300 overflow-hidden h-full shadow-md z-40 
-        ${isSidebarVisible ? "translate-x-0" : "-translate-x-full"}
+        ${isSidebarVisible ? "translate-x-0" : "-translate-x-full"} 
         md:translate-x-0`;
 
     return (
@@ -114,12 +113,6 @@ const Sidebar = () => {
 
                 {isAuthenticated && (
                     <div className="flex-grow mt-8">
-                        {/* <SidebarLink
-                            href="/dashboard"
-                            icon={Layout}
-                            label="Dashboard"
-                            isCollapsed={isSidebarCollapsed}
-                        /> */}
                         <SidebarLink
                             href="/inventory"
                             icon={Archive}

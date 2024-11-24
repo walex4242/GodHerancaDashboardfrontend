@@ -100,7 +100,7 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
                                 />
                             </div>
                         ) : (
-                            <FaUserCircle size={28} className="text-gray-500 dark:text-gray-300" />
+                            <FaUserCircle size={40} className="text-gray-500 dark:text-gray-300" />
                         )}
                     </button>
                     {isDropdownOpen && (
