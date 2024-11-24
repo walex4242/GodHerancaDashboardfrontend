@@ -148,7 +148,7 @@ const CreateProductModal: React.FC<CreateProductModalProps> = ({ isOpen, onClose
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 light">
             <div className="bg-white p-8 rounded shadow-lg max-w-md w-full" style={{ maxHeight: '80vh', overflowY: 'auto' }}>
                 <h2 className="text-2xl font-bold mb-6">{editingProduct ? "Edit Product" : "Create Product"}</h2>
                 <form onSubmit={handleSubmit}>

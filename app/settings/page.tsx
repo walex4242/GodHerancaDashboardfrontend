@@ -89,7 +89,7 @@ const Settings = () => {
     }
 
     return (
-        <div className="w-full px-4 py-6 sm:px-6 md:px-8 lg:px-10">
+        <div className="w-full px-4 py-6 sm:px-6 md:px-8 lg:px-10 light">
             <Heading name={t('userSettings')} />
             <div className="overflow-x-auto mt-5 shadow-md rounded-lg">
                 <table className="min-w-full bg-white rounded-lg">

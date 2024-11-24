@@ -19,7 +19,7 @@ const ProfilePage = () => {
     }
 
     return (
-        <div className="flex justify-center items-center h-full w-full">
+        <div className="flex justify-center items-center h-full w-full light">
             <ProfileClient />
         </div>
     );

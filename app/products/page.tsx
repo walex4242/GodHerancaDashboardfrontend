@@ -75,7 +75,7 @@ const Products = () => {
     };
 
     return (
-        <div className="container mx-auto p-6 bg-gray-50 min-h-screen">
+        <div className="container mx-auto p-6 bg-gray-50 min-h-screen light">
             {/* SEARCH BAR */}
             <div className="mb-6 flex justify-center">
                 <input

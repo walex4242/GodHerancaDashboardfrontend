@@ -81,7 +81,7 @@ const ProfileClient = () => {
     if (!user) return <div>No user data available.</div>;
 
     return (
-        <div className="flex flex-col md:flex-row items-center md:items-start gap-8 p-4 w-full h-full border rounded-lg shadow-md">
+        <div className="flex flex-col md:flex-row items-center md:items-start gap-8 p-4 w-full h-full border rounded-lg shadow-md light">
             <div className="relative w-40 h-40 md:w-60 md:h-60">
                 {formData.profilePicture ? (
                     <img

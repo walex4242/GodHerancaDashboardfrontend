@@ -93,29 +93,8 @@ const Signup = () => {
         }
     };
 
-    const onSuccess = async (response: any) => {
-        try {
-            const { credential } = response;  // Assuming the token is in 'credential'
-            const googleResponse = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/oauth/google`, { token: credential });
-            if (googleResponse.status === 200) {
-                setSuccess('Google Sign-In successful! You can now log in.');
-                setError('');
-            } else {
-                setError('Google Sign-In failed. Please try again.');
-            }
-        } catch (err) {
-            setError('Google Sign-In failed. Please try again.');
-        }
-    };
-
-
-    const onFailure = () => {
-        console.error(error);
-        setError('Google Sign-In failed. Please try again.');
-    };
-
     return (
-        <div className="flex justify-center items-start min-h-screen bg-gray-50 pt-12 sm:pt-20 px-4">
+        <div className="flex justify-center items-start min-h-screen bg-gray-50 pt-12 sm:pt-20 px-4 light">
             <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
                 <h2 className="text-2xl font-bold text-center mb-6">Sign Up</h2>
                 {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
