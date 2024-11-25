@@ -55,21 +55,27 @@ const SidebarLink = ({
     );
 };
 
-const Sidebar = () => {
+const Sidebar = ({
+    isSidebarVisible,
+    toggleSidebarVisibility,
+}: {
+    isSidebarVisible: boolean;
+    toggleSidebarVisibility: () => void;
+}) => {
     const dispatch = useAppDispatch();
     const isSidebarCollapsed = useAppSelector(
         (state) => state.global.isSidebarCollapsed
     );
     const { isAuthenticated } = useLogin(); // Get the authentication state from LoginContext
-    const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+    // const [isSidebarVisible, setIsSidebarVisible] = useState(false);
 
     const toggleSidebar = () => {
         dispatch(setIsSidebarCollapsed(!isSidebarCollapsed));
     };
 
-    const toggleSidebarVisibility = () => {
-        setIsSidebarVisible(!isSidebarVisible);
-    };
+    // const toggleSidebarVisibility = () => {
+    //     setIsSidebarVisible(!isSidebarVisible);
+    // };
 
     const sidebarClassNames = `fixed flex flex-col ${isSidebarCollapsed ? "w-16" : "w-64"
         } bg-white transition-all duration-300 overflow-hidden h-full shadow-md z-40 
@@ -162,3 +168,4 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+

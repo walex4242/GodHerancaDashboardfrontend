@@ -166,37 +166,41 @@ const CategoriesPage = () => {
                     placeholder="Search categories..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full max-w-lg py-2 px-4 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-black"
+                    className="w-full sm:max-w-xs md:max-w-md py-2 px-4 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-black"
                 />
             </div>
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-3xl font-bold text-gray-800">Categories</h2>
+            <div className="flex flex-wrap justify-between items-center mb-6 ">
+                <h2 className="text-2xl font-bold text-gray-800 sm:text-3xl">Categories</h2>
                 <button
                     onClick={handleCreate}
-                    className="flex items-center bg-gray-400 hover:bg-black text-white font-bold py-2 px-4 rounded-lg"
+                    className="mt-2 sm:mt-0 flex items-center bg-gray-300 hover:bg-black text-white font-bold py-2 px-4 rounded-lg text-sm sm:text-base"
                 >
                     <PlusCircleIcon className="w-5 h-5 mr-2" /> Create Category
                 </button>
             </div>
             {loading && <p>Loading...</p>}
             {error && <p className="text-red-500">{error}</p>}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {filteredCategories.map(renderCategory)}
             </div>
             {isFormOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-                    <div className="bg-white p-8 rounded shadow-lg">
+                    <div className="bg-white p-8 rounded shadow-lg w-full sm:w-auto sm:max-w-lg md:max-w-xl lg:max-w-2xl">
                         <CategoryForm
                             category={editingCategory}
                             onSave={handleSave}
                             onCancel={handleCancel}
                             parentCategories={parentCategories}
                             userId={user?._id || ''}
-                            supermarketId={supermarketId || ''} loading={loading} />
+                            supermarketId={supermarketId || ''}
+                            loading={loading}
+                        />
                     </div>
                 </div>
             )}
         </div>
+
+
     );
 };
 

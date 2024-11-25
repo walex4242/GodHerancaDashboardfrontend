@@ -42,12 +42,12 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
     return (
         <div className="flex justify-between items-center w-full mb-4 p-3 bg-white dark:bg-gray-900 shadow-sm ">
             {/* Left Section */}
-            <div className="flex items-center gap-5">
+            <div className="flex items-center gap-5 pr-2">
                 <button
-                    className="px-3 py-3 bg-gray-100 dark:bg-gray-800 rounded-full hover:bg-gray-300 dark:hover:bg-gray-700"
+                    className="px-3 py-3 bg-gray-100 dark:bg-gray-800 rounded-full hover:bg-gray-300 dark:hover:bg-gray-700 hidden md:block "
                     onClick={toggleSidebar}
                 >
-                    <Menu className="w-5 h-5 text-black dark:text-white" />
+                    <Menu className="w-5 h-5 text-black dark:text-white " />
                 </button>
                 <div className="relative w-full max-w-xs md:max-w-sm">
                     <input
@@ -81,7 +81,7 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
                         )}
                     </button>
                     {isDropdownOpen && (
-                        <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg z-50">
+                        <div className="absolute right-0  mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg z-50">
                             {isAuthenticated ? (
                                 <>
                                     <Link

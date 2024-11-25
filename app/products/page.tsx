@@ -75,24 +75,24 @@ const Products = () => {
     };
 
     return (
-        <div className="container mx-auto p-6 bg-gray-50 min-h-screen light">
+        <div className="container mx-auto p-4 sm:p-6 bg-gray-50 min-h-screen">
             {/* SEARCH BAR */}
-            <div className="mb-6 flex justify-center">
+            <div className="mb-6 flex justify-center px-2">
                 <input
-                    className="w-full max-w-lg py-2 px-4 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-black"
+                    className="w-full max-w-md py-2 px-4 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-black sm:max-w-lg"
                     placeholder="Search products..."
-                    value={searchTerm} // Ensure value is never undefined
+                    value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
 
             {/* HEADER BAR */}
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-3xl font-bold text-gray-800">Products</h2>
+            <div className="flex flex-wrap justify-between items-center mb-6 px-2">
+                <h2 className="text-2xl font-bold text-gray-800 sm:text-3xl">Products</h2>
                 <button
-                    className="flex items-center bg-gray-300 hover:bg-black text-white font-bold py-2 px-4 rounded-lg"
+                    className="mt-2 sm:mt-0 flex items-center bg-gray-300 hover:bg-black text-white font-bold py-2 px-4 rounded-lg text-sm sm:text-base"
                     onClick={() => {
-                        setEditingProduct(null); // Clear editing state when creating a new product
+                        setEditingProduct(null);
                         setIsModalOpen(true);
                     }}
                 >
@@ -101,32 +101,32 @@ const Products = () => {
             </div>
 
             {/* BODY PRODUCTS LIST */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-2">
                 {filteredProducts.length === 0 ? (
                     <div className="col-span-full text-center text-gray-500">No products found</div>
                 ) : (
                     filteredProducts.map((product) => {
-                        const isPromotionActive = product.promotionEnd && new Date(product.promotionEnd) >= new Date();
-                        const displayPrice = isPromotionActive && product.discount
-                            ? product.price * (1 - (product.discount / 100))
-                            : product.price;
+                        const isPromotionActive =
+                            product.promotionEnd && new Date(product.promotionEnd) >= new Date();
+                        const displayPrice =
+                            isPromotionActive && product.discount
+                                ? product.price * (1 - product.discount / 100)
+                                : product.price;
 
                         return (
                             <div
                                 key={product._id}
-                                className="border rounded-lg shadow-lg bg-white p-4 flex flex-col items-center"
+                                className="border rounded-lg shadow-lg bg-white p-4 flex flex-col items-center text-center"
                             >
                                 <Image
                                     src={product.image || '/default-image.png'}
                                     alt={product.name}
                                     width={80}
                                     height={80}
-                                    className="mb-4 rounded-3xl w-32 h-32 object-cover"
+                                    className="mb-4 rounded-lg w-24 h-24 sm:w-32 sm:h-32 object-cover"
                                 />
-                                <h3 className="text-xl font-semibold text-gray-800 mb-2 text-center">
-                                    {product.name}
-                                </h3>
-                                <div className="text-lg font-medium text-gray-800 mb-2">
+                                <h3 className="text-lg font-semibold text-gray-800 mb-2">{product.name}</h3>
+                                <div className="text-base font-medium text-gray-800 mb-2">
                                     {product.discount && isPromotionActive ? (
                                         <>
                                             <span className="line-through text-gray-500">${Number(product.price).toFixed(2)}</span>{" "}
@@ -151,24 +151,21 @@ const Products = () => {
                                 <div className="text-sm text-gray-600 mb-2">
                                     Weight: {product.weight} {product.unit}
                                 </div>
-                                <div className="text-sm text-gray-600 mb-2">
-                                    {product.description}
-                                </div>
+                                <div className="text-sm text-gray-600 mb-2">{product.description}</div>
                                 {product.promotionEnd && (
                                     <div className="text-sm text-gray-600 mb-4">
-                                        Promotion ends:{" "}
-                                        {(new Date(product.promotionEnd)).toLocaleDateString()}
+                                        Promotion ends: {(new Date(product.promotionEnd)).toLocaleDateString()}
                                     </div>
                                 )}
-                                <div className="flex space-x-3">
+                                <div className="flex flex-col sm:flex-row sm:space-x-2 w-full">
                                     <button
-                                        className="flex items-center bg-gray-600 hover:bg-black text-white font-bold py-2 px-4 rounded-lg"
+                                        className="flex-1 flex items-center justify-center bg-gray-600 hover:bg-black text-white font-bold py-2 px-4 rounded-lg text-sm"
                                         onClick={() => handleEditProduct(product)}
                                     >
                                         <EditIcon className="w-5 h-5 mr-2" /> Edit
                                     </button>
                                     <button
-                                        className="flex items-center bg-gray-600 hover:bg-black text-white font-bold py-2 px-4 rounded-lg"
+                                        className="flex-1 flex items-center justify-center bg-gray-600 hover:bg-black text-white font-bold py-2 px-4 rounded-lg text-sm mt-2 sm:mt-0"
                                         onClick={() => handleDeleteProduct(product._id)}
                                     >
                                         <Trash2Icon className="w-5 h-5 mr-2" /> Delete
@@ -187,6 +184,7 @@ const Products = () => {
                 editingProduct={editingProduct}
             />
         </div>
+
     );
 };
 

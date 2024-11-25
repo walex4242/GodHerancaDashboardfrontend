@@ -62,7 +62,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="border p-2 w-full"
+                    className="border p-2 w-full rounded-md"
                     required
                     disabled={loading} // Disable input while saving
                 />
@@ -72,11 +72,11 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
                 <input
                     type="file"
                     onChange={handleImageChange}
-                    className="border p-2 w-full"
+                    className="border p-2 w-full rounded-md"
                     accept="image/*"
                     disabled={loading} // Disable input while saving
                 />
-                {imageFile && <p className="mt-2">Selected file: {imageFile.name}</p>}
+                {imageFile && <p className="mt-2 text-sm text-gray-600">Selected file: {imageFile.name}</p>}
             </div>
             {parentCategories.length > 0 && (
                 <div>
@@ -84,7 +84,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
                     <select
                         value={parentCategory}
                         onChange={(e) => setParentCategory(e.target.value)}
-                        className="border p-2 w-full"
+                        className="border p-2 w-full rounded-md"
                         disabled={loading} // Disable input while saving
                     >
                         <option value="">None</option>
@@ -96,24 +96,25 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
                     </select>
                 </div>
             )}
-            <div className="flex space-x-4">
+            <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
                 <button
                     type="submit"
-                    className="bg-gray-500 hover:bg-black text-white px-4 py-2 rounded-xl"
+                    className="bg-gray-500 hover:bg-black text-white px-4 py-2 rounded-xl w-full sm:w-auto"
                     disabled={loading} // Disable button while saving
                 >
-                    {loading ? 'Saving...' : 'Save'} {/* Show "Saving..." when loading */}
+                    {loading ? 'Saving...' : 'Save'}
                 </button>
                 <button
                     type="button"
                     onClick={onCancel}
-                    className="bg-gray-500 hover:bg-black text-white px-4 py-2 rounded-xl"
+                    className="bg-gray-500 hover:bg-black text-white px-4 py-2 rounded-xl w-full sm:w-auto"
                     disabled={loading} // Disable cancel button while saving
                 >
                     Cancel
                 </button>
             </div>
         </form>
+
     );
 };
 

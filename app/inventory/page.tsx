@@ -30,7 +30,7 @@ const Inventory = () => {
     const { supermarketId } = useSupermarket();
     const [isInitialLoad, setIsInitialLoad] = useState(true);
     const router = useRouter();
-    
+
 
 
     const fetchItems = useCallback(async () => {
@@ -162,10 +162,10 @@ const Inventory = () => {
 
     return (
         <div className="container mx-auto p-4 light">
-            <div className="flex justify-between items-center mb-4">
-                <h1 className="text-2xl font-bold">Inventory</h1>
+            <div className="flex flex-wrap justify-between items-center mb-4">
+                <h1 className="text-xl sm:text-2xl font-bold">Inventory</h1>
                 <button
-                    className="bg-black-300 text-white px-4 py-2 rounded"
+                    className="bg-black-300 text-white px-4 py-2 rounded text-sm sm:text-base"
                     onClick={handleDeleteSelected}
                     disabled={Object.keys(selectedRowIds).length === 0}
                 >
@@ -175,7 +175,7 @@ const Inventory = () => {
             <div className="overflow-x-auto">
                 <table
                     {...getTableProps()}
-                    className="min-w-full bg-white shadow rounded-lg border border-gray-200"
+                    className="w-full bg-white shadow rounded-lg border border-gray-200 text-sm sm:text-base"
                 >
                     <thead>
                         {headerGroups.map(headerGroup => {
@@ -187,7 +187,7 @@ const Inventory = () => {
                                         const { key: columnKey, ...columnProps } = column.getHeaderProps();
 
                                         return (
-                                            <th key={columnKey} {...columnProps} className="p-3 text-left border-b">
+                                            <th key={columnKey} {...columnProps} className="p-2 sm:p-3 text-left border-b">
                                                 {column.render('Header')}
                                             </th>
                                         );
@@ -207,7 +207,7 @@ const Inventory = () => {
                                         const { key: cellKey, ...cellProps } = cell.getCellProps();
 
                                         return (
-                                            <td key={cellKey} {...cellProps} className="p-3 border-b">
+                                            <td key={cellKey} {...cellProps} className="p-2 sm:p-3 border-b">
                                                 {cell.render('Cell')}
                                             </td>
                                         );
@@ -219,6 +219,7 @@ const Inventory = () => {
                 </table>
             </div>
         </div>
+
     );
 };
 
