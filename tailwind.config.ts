@@ -14,6 +14,9 @@ const config: Config = {
         primary: colors.blue['500'], // Define your primary color statically
         secondary: colors.gray['700'], // Example secondary color
       },
+      screens: {
+        xs: '375px', // iPhone 11 Pro width
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':

@@ -26,8 +26,10 @@ const ClientSideLayout = ({ children }: { children: React.ReactNode }) => {
             className={`flex min-h-screen ${isDarkMode ? "bg-gray-900 text-gray-100" : "bg-gray-50 text-gray-900"}`}
         >
             {/* Sidebar */}
-            <div className={`fixed inset-y-0 left-0 z-30 transform md:relative md:translate-x-0 transition-transform duration-300 ${isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
-                }`}>
+            <div
+                className={`fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ${isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
+                    } md:translate-x-0`}
+            >
                 <Sidebar
                     isSidebarVisible={isMobileSidebarOpen}
                     toggleSidebarVisibility={toggleSidebarVisibility}
@@ -35,7 +37,7 @@ const ClientSideLayout = ({ children }: { children: React.ReactNode }) => {
             </div>
 
             <main
-                className={`flex flex-col w-full h-full py-4 px-4 sm:px-6 md:px-9 transition-all ${isSidebarCollapsed ? "md:pl-24" : "md:pl-72"
+                className={`flex flex-col w-full h-full overflow-y-auto py-4 px-4 sm:px-6 md:px-9 transition-all ${isSidebarCollapsed ? "md:pl-24" : "md:pl-72"
                     }`}
             >
                 <Header>
@@ -52,8 +54,4 @@ const ClientSideLayout = ({ children }: { children: React.ReactNode }) => {
     );
 };
 
-const ClientSideWrapper = ({ children }: { children: React.ReactNode }) => {
-    return <ClientSideLayout>{children}</ClientSideLayout>;
-};
-
-export default ClientSideWrapper;
+export default ClientSideLayout;

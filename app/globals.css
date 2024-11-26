@@ -39,5 +39,5 @@ body.dark {
 }
 
 .fixed {
-    pointer-events: auto;
+  width: 16rem; /* 256px, adjust as needed */
 }
