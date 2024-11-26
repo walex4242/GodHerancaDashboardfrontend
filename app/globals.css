@@ -46,9 +46,4 @@ body.dark {
   color: inherit;
 }
 
-.sidebar-item span {
-    display: inline; /* Ensure text is displayed */
-    white-space: nowrap; /* Prevent text wrapping */
-    overflow: visible; /* Prevent clipping */
-    color: inherit; /* Maintain text color */
-}
+
