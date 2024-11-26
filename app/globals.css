@@ -42,6 +42,11 @@ body.dark {
   @apply w-64 md:w-64 sm:w-48; /* Force widths across breakpoints */
 }
 
+.sidebar-link {
+  border: 1px solid red;
+}
+
+
 .fixed {
   z-index: 50;
   overflow: visible;
