@@ -38,11 +38,6 @@ body.dark {
   }
 }
 
-.sidebar-link {
-  border: 1px solid red;
-}
-
-
 .fixed {
   z-index: 50;
   overflow: visible;

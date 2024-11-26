@@ -49,7 +49,7 @@ const SidebarLink = ({
             >
                 <Icon className="w-6 h-6 !text-gray-700" />
                 <span
-                    className={`${isCollapsed ? "hidden md:block" : "inline-block"
+                    className={`${!isCollapsed ? "hidden md:block" : "inline-block"
                         } font-medium text-gray-700`}
                 >
                     {label}
