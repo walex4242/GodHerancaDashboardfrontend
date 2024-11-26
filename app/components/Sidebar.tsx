@@ -42,10 +42,15 @@ const SidebarLink = ({
                 className={`cursor-pointer flex items-center ${isCollapsed ? "justify-center py-4" : "justify-start px-8 py-4"
                     } hover:text-gray-500 hover:bg-gray-300 gap-3 transition-colors ${isActive ? "bg-gray-200 text-white" : ""
                     }`}
+                style={{
+                    overflow: "visible",
+                    whiteSpace: "nowrap",
+                }}
             >
                 <Icon className="w-6 h-6 !text-gray-700" />
                 <span
-                    className="block text-gray-700 text-sm md:text-base"
+                    className={`${isCollapsed ? "hidden md:block" : "inline-block"
+                        } font-medium text-gray-700`}
                 >
                     {label}
                 </span>
@@ -53,6 +58,7 @@ const SidebarLink = ({
         </Link>
     );
 };
+
 
 const Sidebar = ({
     isSidebarVisible,
