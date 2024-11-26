@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "https://godherancabackend2-a7sse79m.b4a.run/api/$1"
+      "source": "/(.*)",
+      "destination": "https://godherancabackend2-a7sse79m.b4a.run"
     }
   ],
   "headers": [
