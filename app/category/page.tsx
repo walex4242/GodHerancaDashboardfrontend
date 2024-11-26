@@ -135,16 +135,16 @@ const CategoriesPage = () => {
                 />
             )}
             <h2 className="text-xl font-semibold mt-4 text-center">{category.name}</h2>
-            <div className="mt-4 flex justify-around">
+            <div className="flex flex-col sm:flex-row sm:space-x-2 w-full">
                 <button
                     onClick={() => handleEdit(category)}
-                    className="flex items-center bg-gray-600 hover:bg-black text-white font-bold py-2 px-4 rounded-lg"
+                    className="flex-1 flex items-center justify-center bg-gray-600 hover:bg-black text-white font-bold py-2 px-4 rounded-lg text-sm"
                 >
                     <EditIcon className="w-5 h-5 mr-2" /> Edit
                 </button>
                 <button
                     onClick={() => handleDelete(category._id)}
-                    className="flex items-center bg-gray-600 hover:bg-black text-white font-bold py-2 px-4 rounded-lg"
+                    className="flex-1 flex items-center justify-center bg-gray-600 hover:bg-black text-white font-bold py-2 px-4 rounded-lg text-sm mt-2 sm:mt-0"
                 >
                     <Trash2Icon className="w-5 h-5 mr-2" /> Delete
                 </button>
