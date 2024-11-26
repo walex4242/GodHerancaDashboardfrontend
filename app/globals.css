@@ -37,3 +37,7 @@ body.dark {
     text-wrap: balance;
   }
 }
+
+.fixed {
+    pointer-events: auto;
+}

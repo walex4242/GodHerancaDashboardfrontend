@@ -62,32 +62,21 @@ const Sidebar = ({
     isSidebarVisible: boolean;
     toggleSidebarVisibility: () => void;
 }) => {
-    const dispatch = useAppDispatch();
     const isSidebarCollapsed = useAppSelector(
         (state) => state.global.isSidebarCollapsed
     );
     const { isAuthenticated } = useLogin(); // Get the authentication state from LoginContext
-    // const [isSidebarVisible, setIsSidebarVisible] = useState(false);
 
-    const toggleSidebar = () => {
-        dispatch(setIsSidebarCollapsed(!isSidebarCollapsed));
-    };
 
-    // const toggleSidebarVisibility = () => {
-    //     setIsSidebarVisible(!isSidebarVisible);
-    // };
+    const sidebarClassNames = `fixed flex flex-col transform ${isSidebarCollapsed ? "w-16" : "w-64"} bg-white transition-transform duration-300 overflow-hidden h-full shadow-md z-40 ${isSidebarVisible ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`;
 
-    const sidebarClassNames = `fixed flex flex-col ${isSidebarCollapsed ? "w-16" : "w-64"
-        } bg-white transition-all duration-300 overflow-hidden h-full shadow-md z-40 
-        ${isSidebarVisible ? "translate-x-0" : "-translate-x-full"} 
-        md:translate-x-0`;
 
     return (
         <>
             {/* Overlay for small screens */}
             {isSidebarVisible && (
                 <div
-                    className="fixed inset-0 bg-black opacity-50 z-30 md:hidden"
+                    className="fixed inset-0 bg-black opacity-50 z-50 md:hidden"
                     onClick={toggleSidebarVisibility}
                 ></div>
             )}
