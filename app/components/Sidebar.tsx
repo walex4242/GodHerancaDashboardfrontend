@@ -45,7 +45,7 @@ const SidebarLink = ({
             >
                 <Icon className="w-6 h-6 !text-gray-700" />
                 <span
-                    className={`${isCollapsed ? "hidden" : "block"
+                    className={`${isCollapsed ? "hidden" : "inline-block"
                         } font-medium text-gray-700`}
                 >
                     {label}
@@ -68,7 +68,9 @@ const Sidebar = ({
     const { isAuthenticated } = useLogin(); // Get the authentication state from LoginContext
 
 
-    const sidebarClassNames = `fixed flex flex-col transform ${isSidebarCollapsed ? "w-16" : "w-64"} bg-white transition-transform duration-300 overflow-hidden h-full shadow-md z-40 ${isSidebarVisible ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`;
+    const sidebarClassNames = `fixed flex flex-col transform ${isSidebarCollapsed ? "w-14" : "w-56 md:w-64"
+        } bg-white transition-transform duration-300 overflow-hidden h-full shadow-md z-40 ${isSidebarVisible ? "translate-x-0" : "-translate-x-full"
+        } md:translate-x-0`;
 
 
     return (
