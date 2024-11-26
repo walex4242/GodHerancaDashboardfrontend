@@ -1,7 +1,5 @@
 "use client"
-import { useAppDispatch, useAppSelector } from "../redux";
-import { useState } from "react";
-import { setIsSidebarCollapsed } from "@/app/state";
+import { useAppSelector } from "../redux";
 import {
     Archive,
     Clipboard,
@@ -42,14 +40,10 @@ const SidebarLink = ({
                 className={`cursor-pointer flex items-center ${isCollapsed ? "justify-center py-4" : "justify-start px-8 py-4"
                     } hover:text-gray-500 hover:bg-gray-300 gap-3 transition-colors ${isActive ? "bg-gray-200 text-white" : ""
                     }`}
-                style={{
-                    overflow: "visible",
-                    whiteSpace: "nowrap",
-                }}
             >
                 <Icon className="w-6 h-6 !text-gray-700" />
                 <span
-                    className={`${!isCollapsed ? "hidden md:block" : "inline-block"
+                    className={`${isCollapsed ? "hidden" : "block"
                         } font-medium text-gray-700`}
                 >
                     {label}
@@ -58,7 +52,6 @@ const SidebarLink = ({
         </Link>
     );
 };
-
 
 const Sidebar = ({
     isSidebarVisible,
@@ -73,9 +66,7 @@ const Sidebar = ({
     const { isAuthenticated } = useLogin(); // Get the authentication state from LoginContext
 
 
-    const sidebarClassNames = `fixed flex flex-col transform ${isSidebarCollapsed ? "w-14" : "w-56 md:w-64"
-        } bg-white transition-transform duration-300 overflow-hidden h-full shadow-md z-40 ${isSidebarVisible ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0`;
+    const sidebarClassNames = `fixed flex flex-col transform ${isSidebarCollapsed ? "w-16" : "w-64"} bg-white transition-transform duration-300 overflow-hidden h-full shadow-md z-40 ${isSidebarVisible ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`;
 
 
     return (
@@ -164,4 +155,3 @@ const Sidebar = ({
 };
 
 export default Sidebar;
-
