@@ -39,11 +39,8 @@ body.dark {
 }
 
 .fixed {
+  width: 10rem;
   z-index: 50;
-  display: inline; /* Ensure text is displayed */
-  white-space: nowrap; /* Prevent text wrapping */
-  overflow: visible; /* Prevent clipping */
-  color: inherit;
 }
 
 
