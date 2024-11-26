@@ -39,6 +39,5 @@ body.dark {
 }
 
 .fixed {
-  width: 16rem; /* 256px, adjust as needed */
   z-index: 50;
 }
