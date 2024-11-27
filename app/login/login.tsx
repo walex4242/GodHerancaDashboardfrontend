@@ -34,16 +34,16 @@ const Login = () => {
             }, 15 * 60 * 1000);
         };
 
-        window.addEventListener('mousemove', resetTimeout);
-        window.addEventListener('keydown', resetTimeout);
+        const handleUserActivity = () => resetTimeout();
+
+        window.addEventListener('mousemove', handleUserActivity);
+        window.addEventListener('keydown', handleUserActivity);
         resetTimeout();
 
         return () => {
-            window.removeEventListener('mousemove', resetTimeout);
-            window.removeEventListener('keydown', resetTimeout);
-            if (timeoutRef.current) {
-                clearTimeout(timeoutRef.current);
-            }
+            window.removeEventListener('mousemove', handleUserActivity);
+            window.removeEventListener('keydown', handleUserActivity);
+            clearTimeout(timeoutRef.current!);
         };
     }, [dispatch, router]);
 
@@ -91,6 +91,9 @@ const Login = () => {
         }
     };
 
+    const isFormValid = validateEmail(email) && password.length > 0;
+    const isEmailValid = validateEmail(email);
+
     return (
         <div className="flex justify-center items-start min-h-screen bg-white light">
             <div className="p-8 rounded-lg shadow-md w-full max-w-md bg-white dark:bg-gray-800 mt-10">
@@ -106,7 +109,7 @@ const Login = () => {
                             onChange={(e) => setEmail(e.target.value)}
                             required
                             disabled={loading}
-                            className={`mt-1 block w-full px-3 py-2 border ${error && !validateEmail(email) ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                            className={`mt-1 block w-full px-3 py-2 border ${!isEmailValid && email ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                                 } rounded-md shadow-sm focus:outline-none focus:ring-gray-800 focus:border-gray-800 sm:text-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100`}
                         />
                     </div>
@@ -125,7 +128,7 @@ const Login = () => {
                     <button
                         type="submit"
                         className={`w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-400 dark:bg-gray-600 hover:bg-gray-800 dark:hover:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black-400 ${loading || !validateEmail(email) ? 'cursor-not-allowed opacity-50' : ''}`}
-                        disabled={loading || !validateEmail(email)}
+                        disabled={!isFormValid || loading}
                     >
                         {loading ? 'Logging in...' : 'Login'}
                     </button>
