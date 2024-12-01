@@ -33,7 +33,6 @@ const VerificationPage = () => {
     });
 
     const onSubmit: SubmitHandler<VerificationFormInputs> = async (data) => {
-        console.log("Submitting with data:", { email, verificationCode: data.verificationCode }); // Log data to check email
         try {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/verify`, {
                 email,

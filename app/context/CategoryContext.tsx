@@ -84,8 +84,6 @@ export const CategoryProvider: React.FC<{ children: ReactNode }> = ({ children }
                 withCredentials: true, // Send cookies along with the request if needed
             });
 
-            // Handle the successful creation of the category
-            console.log('Category created:', response.data);
             return response.data;
         } catch (error) {
             console.error('Error creating category:', error);

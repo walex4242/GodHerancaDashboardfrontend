@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { GoogleLogin } from '@react-oauth/google';
 import { useRouter } from 'next/navigation';
 import mapboxgl from 'mapbox-gl';
 

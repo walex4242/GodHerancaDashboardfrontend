@@ -63,7 +63,6 @@ const Login = () => {
 
     useEffect(() => {
         if (user) {
-            console.log('User data after login:', user);
         }
     }, [user]); // Logs user data whenever it changes
 

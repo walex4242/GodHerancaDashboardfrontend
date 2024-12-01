@@ -91,7 +91,6 @@ export const LoginProvider = ({ children }: { children: ReactNode }) => {
             setIsAuthenticated(false);
             setUser(null);
 
-            console.log('Logout successful');
         } catch (err) {
             console.error('Logout error:', err);
         }
@@ -121,7 +120,6 @@ export const LoginProvider = ({ children }: { children: ReactNode }) => {
 
             const updatedUser = await response.json();
             setUser(updatedUser.user); // Update the user context with the new data
-            console.log('User updated:', updatedUser);
         } catch (error) {
             console.error('Error updating user:', error);
         }
@@ -170,7 +168,6 @@ export const LoginProvider = ({ children }: { children: ReactNode }) => {
 
         try {
             const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/users/${user?._id}`;
-            console.log('API URL:', apiUrl);
 
             const response = await fetch(apiUrl, {
                 method: 'PATCH',
@@ -186,7 +183,6 @@ export const LoginProvider = ({ children }: { children: ReactNode }) => {
 
             const updatedUser = await response.json();
             setUser(updatedUser.user); // Update the user context with the new profile picture
-            console.log('Profile picture updated:', updatedUser);
         } catch (error) {
             console.error('Error updating profile picture:', error);
         }
