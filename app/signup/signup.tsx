@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -7,6 +7,7 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { GoogleLogin } from '@react-oauth/google';
 import { useRouter } from 'next/navigation';
+import mapboxgl from 'mapbox-gl';
 
 // Define the form inputs type
 interface SignupFormInputs {
@@ -19,7 +20,6 @@ interface SignupFormInputs {
     userType: 'Admin' | 'Driver' | 'Supermarket' | 'Client' | 'Picker';
     profile: string;
 }
-
 // Define the validation schema
 const validationSchema = Yup.object().shape({
     username: Yup.string().required("Username is required"),
@@ -42,8 +42,11 @@ const validationSchema = Yup.object().shape({
     profile: Yup.string().required("Profile is required"),
 });
 
+const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_API_KEY || '';
+mapboxgl.accessToken = mapboxToken;
+
 const Signup = () => {
-    const { register, handleSubmit, formState: { errors, isValid } } = useForm<SignupFormInputs>({
+    const { register, handleSubmit, formState: { errors, isValid }, setValue } = useForm<SignupFormInputs>({
         resolver: yupResolver(validationSchema),
         mode: 'onChange',  // Enables real-time form validation
     });
@@ -51,16 +54,14 @@ const Signup = () => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const router = useRouter();
+    const [manualAddress, setManualAddress] = useState<string>('');
+    const [suggestions, setSuggestions] = useState<string[]>([]);
+
 
     const onSubmit: SubmitHandler<SignupFormInputs> = async (data) => {
         try {
             const addressArray = data.address.split(',').map(addr => addr.trim());
             const registrationData = { ...data, address: addressArray };
-            const headers = {
-                'Content-Type': 'application/json',
-                'Custom-Header': 'YourCustomValue', // Add your custom header values here
-                'Authorization': `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}` // Example if you use an API token
-            };
 
             const registrationResponse = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, registrationData, { 
                 headers: {
@@ -70,7 +71,6 @@ const Signup = () => {
             if (registrationResponse.status === 201) {
                 setSuccess('Registration successful! A verification email has been sent to your inbox.');
                 setError('');
-
                 // Redirect to the verification page
                 router.push(`/verification?email=${data.email}`);
             } else {
@@ -90,6 +90,33 @@ const Signup = () => {
             } else {
                 setError('An unexpected error occurred. Please try again.');
             }
+        }
+    };
+
+    useEffect(() => {
+        if (manualAddress) {
+            fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(manualAddress)}.json?access_token=${mapboxToken}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.features) {
+                        const newSuggestions = data.features.map((feature: any) => feature.place_name);
+                        setSuggestions(newSuggestions);
+                    }
+                })
+                .catch(() => {
+                    setSuggestions([]);
+                });
+        } else {
+            setSuggestions([]);
+        }
+    }, [manualAddress, mapboxToken]);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+
+        if (name === 'address') {
+            setManualAddress(value);  // Update state
+            setValue('address', value);  // Update form value
         }
     };
 
@@ -140,16 +167,46 @@ const Signup = () => {
                         />
                         {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword.message}</p>}
                     </div>
-                    <div className="mb-4">
+                    <div className="relative mb-4">
                         <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address:</label>
                         <input
                             type="text"
                             id="address"
-                            {...register('address')}
+                            {...register("address")}  // Register from react-hook-form
+                            value={manualAddress}  // Controlled value for custom handling
+                            onChange={(e) => {
+                                handleChange(e);  // Custom change handler
+                                setValue("address", e.target.value);  // Set the value in react-hook-form
+                                // Show suggestions only if there is text
+                                setSuggestions(e.target.value ? suggestions : []);
+                            }}
                             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                         />
                         {errors.address && <p className="text-red-500 text-sm">{errors.address.message}</p>}
+
+                        {/* Suggestion box */}
+                        {suggestions.length > 0 && (
+                            <div className="absolute top-full left-0 w-full bg-white shadow-lg z-10">
+                                <ul className="autocomplete-suggestions">
+                                    {suggestions.map((suggestion, index) => (
+                                        <li
+                                            key={index}
+                                            onClick={() => {
+                                                setManualAddress(suggestion); // Set the selected suggestion as the manual address
+                                                setValue('address', suggestion); // Set the address value in react-hook-form
+                                                setSuggestions([]); // Clear suggestions after selection
+                                            }}
+                                            className="cursor-pointer p-2 hover:bg-gray-200"
+                                        >
+                                            {suggestion}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
                     </div>
+
+
                     <div className="mb-4">
                         <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone:</label>
                         <input
@@ -194,13 +251,6 @@ const Signup = () => {
                         Sign Up
                     </button>
                 </form>
-                {/* <div className="mt-4 flex flex-col items-center">
-                    <GoogleLogin
-                        onSuccess={onSuccess}
-                        onError={onFailure}
-                    />
-
-                </div> */}
                 <p className="mt-4 text-center text-sm text-gray-600">
                     Already have an account?
                     <Link href="/login" className="text-blue-600 hover:text-blue-800"> Log in</Link>
@@ -209,5 +259,4 @@ const Signup = () => {
         </div>
     );
 };
-
 export default Signup;

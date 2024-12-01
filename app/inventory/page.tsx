@@ -31,8 +31,6 @@ const Inventory = () => {
     const [isInitialLoad, setIsInitialLoad] = useState(true);
     const router = useRouter();
 
-
-
     const fetchItems = useCallback(async () => {
         if (supermarketId) {
             await fetchItemsBySupermarket();

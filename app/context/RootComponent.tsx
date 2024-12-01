@@ -30,7 +30,7 @@ const RootComponent = ({ children }: { children: React.ReactNode }) => {
 
 const RootComponentWithProvider = ({ children }: { children: React.ReactNode }) => {
     return (
-        <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string}>
+        // <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string}>
         <StoreProvider>
             <I18nextProvider i18n={i18n}>
                 <LoginProvider>
@@ -46,7 +46,6 @@ const RootComponentWithProvider = ({ children }: { children: React.ReactNode }) 
                 </LoginProvider>
              </I18nextProvider>
         </StoreProvider>
-        </GoogleOAuthProvider>
     );
 };
 

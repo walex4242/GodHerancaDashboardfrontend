@@ -20,11 +20,15 @@ const Products = () => {
 
     const fetchItems = useCallback(async () => {
         if (supermarketId) {
-            await fetchItemsBySupermarket();
+            await fetchItemsBySupermarket();  // Fetch items only if supermarketId is available
         } else {
             console.warn('supermarketId is undefined');
         }
-    }, [fetchItemsBySupermarket, supermarketId]);
+    }, [supermarketId]); // Only depend on supermarketId
+
+    useEffect(() => {
+        fetchItems(); // Trigger the fetchItems when supermarketId changes
+    }, [fetchItems]); // Only run when fetchItems function changes (which is memoized)
 
     useEffect(() => {
         if (!isAuthenticated) {

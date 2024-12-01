@@ -1,49 +1,52 @@
-
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { useItem } from './ItemContext';
+import { useDispatch } from 'react-redux';
+import { clearUser } from '../state/authSlice';
 
 // Define the shape of the user data
-interface User {
+export interface User {
     _id: string;
     username: string;
     email: string;
-    profilePicture?: string;
-    address: string[];
+    profile?: string;
+    address: string | string[] | undefined;
     phone: string;
-    profile: string;
+    supermarketId?: string;
+    userType: string;
+    profilePicture: string;
+    isVerified: boolean;
     uid: string;
-    supermarketId?: string;  // Make optional if not every user has it
-    driverId?: string;
-    clientId?: string;
-    pickerId?: string;
-    adminId?: string;
     authentication: {
         password: string;
-        sessionToken?: string;
-        salt: string;
+        sessionToken?: string; // Optional
+        salt?: string;
     };
-    // Add other user fields here
+    createdAt: string;
+    updatedAt: string;
+    __v?: number; // Optional
 }
 
-// Define the shape of the context state
 interface LoginContextType {
     isAuthenticated: boolean;
     user: User | null;
     updateUser: (data: FormData) => Promise<void>;
-    updatePassword: (currentPassword: string, newPassword: string) => Promise<void>;
+    updatePassword: (currentPassword: string, newPassword: string) => Promise<{ success: boolean; message: string }>;
     updateProfilePicture: (picture: File) => Promise<void>;
     login: (email: string, password: string) => Promise<void>;
     logout: () => void;
+    setUser: React.Dispatch<React.SetStateAction<User | null>>; // Added setUser to context
     supermarketId: string | null;
 }
 
-// Create the context with an initial value of null
 const LoginContext = createContext<LoginContextType | null>(null);
 
 export const LoginProvider = ({ children }: { children: ReactNode }) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const [user, setUser] = useState<User | null>(null);
+    const { clearItems, fetchItemsBySupermarket } = useItem();
+    const dispatch = useDispatch();
 
-    // Function to handle login
+    // Function for logging in a user
     const login = async (email: string, password: string) => {
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
@@ -52,119 +55,113 @@ export const LoginProvider = ({ children }: { children: ReactNode }) => {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
                 },
-                credentials: 'include', // Ensure cookies are included with the request
                 body: JSON.stringify({ email, password }),
+                credentials: 'include',
             });
 
             if (!response.ok) {
                 throw new Error('Login failed');
             }
 
-            const userData = await response.json();
-            setIsAuthenticated(true);
-            setUser(userData);
+            const responseData = await response.json();
+            if (responseData?.token) {
+                document.cookie = `token=${responseData.token}; path=/; secure; HttpOnly`; // Store token securely
+                setIsAuthenticated(true);
+                setUser(responseData);
+            } else {
+                throw new Error('Token or user data not available');
+            }
         } catch (error) {
             console.error('Failed to login:', error);
             throw error;
         }
     };
 
-    // Function to handle logout
+    // Function for logging out a user
     const logout = () => {
-        setIsAuthenticated(false);
-        setUser(null);
+        try {
+            clearItems(); // Clear items from context
+            dispatch(clearUser()); // Clear user from Redux
+
+            // Clear cookie and localStorage token if used
+            document.cookie = 'token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 UTC;';
+            localStorage.removeItem('token');
+
+            // Reset authentication state
+            setIsAuthenticated(false);
+            setUser(null);
+
+            console.log('Logout successful');
+        } catch (err) {
+            console.error('Logout error:', err);
+        }
     };
 
-    // Function to update the user profile
+    // Function to update user data (such as profile or address)
     const updateUser = async (data: FormData) => {
-        if (!user || !user._id) {
-            console.error('User ID is not available');
+        if (!user?._id) {
+            console.error('User ID is missing.');
             return;
         }
 
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user._id}`, {
+            const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/users/${user._id}`;
+
+            const response = await fetch(apiUrl, {
                 method: 'PATCH',
+                credentials: 'include', // Ensure cookies are sent with the request
                 body: data,
-                credentials: 'include', // Ensure cookies are included with the request
-                headers: {
-                    'Accept': 'application/json',
-                },
             });
 
             if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(errorText);
+                const errorMessage = await response.text();
+                console.error('Error response:', errorMessage);
+                throw new Error('Failed to update user');
             }
 
             const updatedUser = await response.json();
-            setUser(updatedUser);
+            setUser(updatedUser.user); // Update the user context with the new data
+            console.log('User updated:', updatedUser);
         } catch (error) {
-            console.error('Failed to update profile:', error);
+            console.error('Error updating user:', error);
         }
     };
 
     // Function to update the user's password
-    // const updatePassword = async (password: string) => {
-    //     if (!user || !user._id) {
-    //         console.error('User ID is not available');
-    //         return;
-    //     }
-
-    //     try {
-    //         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user._id}`, {
-    //             method: 'PATCH',
-    //             body: JSON.stringify({ password }),
-    //             credentials: 'include', // Ensure cookies are included with the request
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 'Accept': 'application/json',
-    //             },
-    //         });
-
-    //         if (!response.ok) {
-    //             const errorText = await response.text();
-    //             throw new Error(errorText);
-    //         }
-
-    //         console.log('Password updated successfully');
-    //     } catch (error) {
-    //         console.error('Failed to update password:', error);
-    //     }
-    // };
-
     const updatePassword = async (currentPassword: string, newPassword: string) => {
-        if (!user || !user._id) {
-            console.error('User ID is not available');
-            return;
-        }
-
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user._id}`, {
+            const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/users/${user?._id}/password`;
+            const response = await fetch(apiUrl, {
                 method: 'PATCH',
-                body: JSON.stringify({ currentPassword, newPassword }),
-                credentials: 'include', // Ensure cookies are included with the request
+                credentials: 'include',  // Make sure cookies are sent with the request
                 headers: {
                     'Content-Type': 'application/json',
-                    'Accept': 'application/json',
                 },
+                body: JSON.stringify({ currentPassword, newPassword }),
             });
 
             if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(errorText);
+                const errorMessage = await response.text();
+                console.error('Error updating password:', errorMessage);
+                return { success: false, message: 'Failed to update password' };
             }
 
-            console.log('Password updated successfully');
+            const result = await response.json();
+            if (result.token) {
+                document.cookie = `token=${result.token}; path=/; secure; HttpOnly;`;
+            }
+
+            return { success: true, message: 'Password updated successfully' };
         } catch (error) {
-            console.error('Failed to update password:', error);
+            console.error('Error:', error);
+            return { success: false, message: 'An error occurred while updating the password' };
         }
     };
 
-
+    // Function to update the user's profile picture
     const updateProfilePicture = async (picture: File) => {
-        if (!user || !user._id) {
-            console.error('User ID is not available');
+        if (!user?._id) {
+            console.error('User ID is missing.');
             return;
         }
 
@@ -172,58 +169,78 @@ export const LoginProvider = ({ children }: { children: ReactNode }) => {
         formData.append('profilePicture', picture);
 
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user._id}`, {
+            const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/users/${user?._id}`;
+            console.log('API URL:', apiUrl);
+
+            const response = await fetch(apiUrl, {
                 method: 'PATCH',
+                credentials: 'include', // Ensure cookies are sent with the request
                 body: formData,
-                credentials: 'include', // Ensure cookies are included with the request
-                headers: {
-                    'Accept': 'application/json',
-                },
             });
 
             if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(errorText);
+                const errorMessage = await response.text();
+                console.error('Error response:', errorMessage);
+                throw new Error('Failed to update profile picture');
             }
 
             const updatedUser = await response.json();
-            setUser(updatedUser); // Update the user state with the new data
+            setUser(updatedUser.user); // Update the user context with the new profile picture
+            console.log('Profile picture updated:', updatedUser);
         } catch (error) {
-            console.error('Failed to update profile picture:', error);
+            console.error('Error updating profile picture:', error);
         }
     };
 
-    // Fetch user data from the backend if session exists on mount
+    // Fetch the user data if the token exists
     useEffect(() => {
-        const checkAuth = async () => {
-            if (!user || !user._id) return;
+        const token = document.cookie.split(';').find(cookie => cookie.trim().startsWith('token='));
+        if (!token) {
+            setIsAuthenticated(false);
+            setUser(null);
+            return;
+        }
 
+        const checkAuth = async () => {
             try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user._id}`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user?._id}`, { // 'me' endpoint for authenticated user
                     method: 'GET',
-                    credentials: 'include', // Include cookies with the request
+                    headers: {
+                        'Authorization': `Bearer ${token.split('=')[1]}`, // Extract token
+                    },
                 });
 
                 if (response.ok) {
-                    const userData = await response.json();
+                    const responseData = await response.json();
                     setIsAuthenticated(true);
-                    setUser(userData);
+                    setUser(responseData);
                 } else {
+                    console.error('Failed to fetch user data');
                     setIsAuthenticated(false);
                     setUser(null);
                 }
             } catch (error) {
-                console.error('Failed to check auth status:', error);
+                console.error('Error fetching user data:', error);
                 setIsAuthenticated(false);
                 setUser(null);
             }
         };
 
         checkAuth();
-    }, [user?._id]);
+    }, []); // Empty dependency array means this will only run on component mount
 
     return (
-        <LoginContext.Provider value={{ isAuthenticated, user, updateUser, supermarketId: user?.supermarketId || null, updateProfilePicture, updatePassword, login, logout }}>
+        <LoginContext.Provider value={{
+            isAuthenticated,
+            user,
+            login,
+            logout,
+            updateUser,
+            updatePassword,
+            updateProfilePicture,
+            setUser,
+            supermarketId: user?.supermarketId || null
+        }}>
             {children}
         </LoginContext.Provider>
     );

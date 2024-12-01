@@ -6,11 +6,19 @@ import { useItem } from '../context/ItemContext';
 const Logout = () => {
     const dispatch = useDispatch();
     const router = useRouter();
+    const { clearItems } = useItem();
 
     const handleLogout = async () => {
         try {
+            console.log('Clearing items...');
+            clearItems();
+            console.log('Items cleared, clearing user...');
             dispatch(clearUser());
-            router.push('/');
+            console.log('User cleared, clearing token...');
+            document.cookie = 'token=; Max-Age=0; path=/';
+            localStorage.removeItem('token');
+            console.log('Redirecting to login...');
+            router.push('/login');
         } catch (err) {
             console.error('Logout failed:', err);
         }

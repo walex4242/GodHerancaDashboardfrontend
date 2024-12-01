@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 import { useLogin } from './LoginContext';
 import { useSupermarket } from './SupermarketContext';
 
@@ -28,7 +28,7 @@ interface ItemContextType {
     items: Item[];
     createItem: (item: Partial<Item>, image: File) => Promise<void>;
     fetchItemById: (id: string) => Promise<Item | null>;
-    fetchItemsBySupermarket: () => Promise<Item[]>;
+    fetchItemsBySupermarket: () => Promise<Item[]>;  // This should return Item[]
     fetchItemsByCategory: (categoryId: string) => Promise<Item[]>;
     updateItem: (id: string, updatedItem: Partial<Item>, image?: File) => Promise<void>;
     deleteItem: (id: string) => Promise<void>;
@@ -42,7 +42,36 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const { user, isAuthenticated } = useLogin();
     const { supermarketId } = useSupermarket();
     const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
 
+    const fetchItemsBySupermarket = async (): Promise<Item[]> => {
+        if (!isAuthenticated || !supermarketId) return []; // return an empty array if conditions are not met
+        setLoading(true);
+        setError(null);
+
+        try {
+            const response = await axios.get<Item[]>(`${process.env.NEXT_PUBLIC_API_URL}/supermarket/${supermarketId}/items`, {
+                headers: { Authorization: `Bearer ${user?._id}` },
+                withCredentials: true,
+            });
+            setItems(response.data); // Update state with the fetched items
+            return response.data; // Return the fetched items
+        } catch (err) {
+            const errorMsg = isAxiosError(err) ? err.response?.data?.message || err.message : 'Unexpected error occurred.';
+            setError(errorMsg);
+            return []; // Return an empty array in case of error
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const clearItems = () => {
+        setItems([]); // Clear items
+        setTimeout(() => {
+            setItems([]); // Ensure double clearing in case of async issues
+        }, 0);
+    };
+    
     useEffect(() => {
         if (!isAuthenticated || !supermarketId || !user) {
             clearItems(); // Clear items immediately if the user is logged out
@@ -51,19 +80,9 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     }, [isAuthenticated, supermarketId, user]);
 
-    // useEffect(() => {
-    //     console.log("isAuthenticated or supermarketId changed", { isAuthenticated, supermarketId });
-    //     if (isAuthenticated && supermarketId && user) {
-    //         fetchItemsBySupermarket();
-    //     } 
-    // }, [isAuthenticated, supermarketId, user]);
-
-    const createItem = async (item: Partial<Item>, image: File) => {
-        if (!user || !isAuthenticated) {
-            console.error('User is not authenticated');
-            return;
-        }
-
+    const createItem = async (item: Partial<Item>, image: File): Promise<void> => {
+        if (!user || !isAuthenticated) return;
+        setLoading(true);
         try {
             const formData = new FormData();
             Object.keys(item).forEach((key) => {
@@ -71,30 +90,22 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 if (value !== undefined) {
                     if (key === 'promotionEnd' && value instanceof Date) {
                         formData.append(key, value.toISOString());
-                    } else if (key === 'quantityOffers') {
-                        formData.append(key, JSON.stringify(value)); // Stringify quantityOffers array
                     } else {
                         formData.append(key, value as string | Blob);
                     }
                 }
             });
-
-            if (image) {
-                formData.append('imageUrl', image);
-            }
-
-            await axios.post<Item>(`${process.env.NEXT_PUBLIC_API_URL}/item/${supermarketId}`, formData, {
-                headers: {
-                    'Authorization': `Bearer ${user?._id}`,
-                    'Content-Type': 'multipart/form-data',
-                    'Accept': 'application/json',
-                },
+            formData.append('imageUrl', image);
+            await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/item/${supermarketId}`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
                 withCredentials: true,
             });
-
-            fetchItemsBySupermarket();
-        } catch (error) {
-            console.error('Error creating item:', error);
+            fetchItemsBySupermarket(); // Fetch items after creating the item
+        } catch (err) {
+            setError('Error creating item');
+            console.error('Error creating item:', err);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -114,44 +125,6 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     };
 
-    const clearItems = () => {
-        setItems([]);
-        setLoading(false); // Ensure loading is reset when clearing items
-    };
-
-    const fetchItemsBySupermarket = async (): Promise<Item[]> => {
-        if (!user || !isAuthenticated || !supermarketId) {
-            console.error('Supermarket ID is not available');
-            clearItems();
-            return [];
-        }
-
-        setLoading(true); // Start loading before fetching
-        try {
-            const response = await axios.get<Item[]>(`${process.env.NEXT_PUBLIC_API_URL}/supermarket/${supermarketId}/items`, {
-                headers: {
-                    'Authorization': `Bearer ${user?._id}`,
-                },
-                withCredentials: true,
-            });
-
-            if (response.data.length === 0) {
-                clearItems();
-            } else {
-                setItems(response.data);
-            }
-
-            return response.data;
-        } catch (error) {
-            console.error('Error fetching items by supermarket:', error);
-            clearItems();
-            return [];
-        } finally {
-            setLoading(false); // Stop loading after fetching
-        }
-    };
-
-
     const fetchItemsByCategory = async (categoryId: string): Promise<Item[]> => {
         try {
             const response = await axios.get<Item[]>(`${process.env.NEXT_PUBLIC_API_URL}/category/${categoryId}/items`, {
@@ -168,80 +141,46 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
 
     const updateItem = async (id: string, updatedItem: Partial<Item>, image?: File) => {
-        if (!user || !isAuthenticated) {
-            console.error('User is not authenticated');
-            return;
-        }
+        if (!user || !isAuthenticated) return;
+        setLoading(true);
 
         try {
             const formData = new FormData();
 
-            // Append updated item properties to FormData
+            // Add updated item fields to formData
             Object.keys(updatedItem).forEach((key) => {
                 const value = updatedItem[key as keyof Item];
-                if (value !== undefined) {
-                    if (key === 'promotionEnd' && value instanceof Date) {
-                        formData.append(key, value.toISOString());
-                    } else if (key === 'quantityOffers') {
-                        formData.append(key, JSON.stringify(value)); // Stringify quantityOffers array
-                    } else {
-                        formData.append(key, value as string | Blob);
-                    }
-                }
+                if (value !== undefined) formData.append(key, value as string | Blob);
+            });
+            // Add the image if provided
+            if (image) formData.append('imageUrl', image);
+
+            // Make the request to update the item
+            await axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/item/${id}`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+                withCredentials: true,
             });
 
-            // Append image if provided
-            if (image) {
-                formData.append('imageUrl', image); // Ensure this matches backend field name
-            }
-
-            console.log('FormData content:', Array.from(formData.entries()));
-
-            // Make PATCH request to update item
-            const response = await axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/item/${id}`, formData, {
-                headers: {
-                    'Authorization': `Bearer ${user._id}`, // Ensure correct token
-                    'Content-Type': 'multipart/form-data',
-                    'Accept': 'application/json',
-                },
-                withCredentials: true, // Adjust as needed
-            });
-
-            console.log('Update response:', response.data);
-
-            // Update local state to reflect changes
-            setItems((prevItems) =>
-                prevItems.map((item) => (item._id === id ? { ...item, ...response.data } : item))
-            );
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                console.error('Axios error updating item:', error.response?.data || error.message || error);
-            } else {
-                console.error('Unexpected error updating item:', error);
-            }
+            // Refresh the items after update
+            await fetchItemsBySupermarket();
+        } catch (err) {
+            setError('Error updating item.');
+            console.error('Update Item Error:', err);
+        } finally {
+            setLoading(false);
         }
     };
 
-
-
     const deleteItem = async (id: string) => {
-        if (!user || !isAuthenticated) {
-            console.error('User is not authenticated');
-            return;
-        }
-
+        if (!user || !isAuthenticated) return;
+        setLoading(true);
         try {
-            await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/item/${id}`, {
-                headers: {
-                    'Authorization': `Bearer ${user?._id}`,
-                    'Content-Type': 'multipart/form-data',
-                    'Accept': 'application/json',
-                },
-                withCredentials: true,
-            });
-            setItems((prevItems) => prevItems.filter((item) => item._id !== id));
-        } catch (error) {
-            console.error('Error deleting item:', error);
+            await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/item/${id}`, { withCredentials: true });
+            setItems((prev) => prev.filter((item) => item._id !== id));
+        } catch (err) {
+            setError('Error deleting item.');
+        } finally {
+            setLoading(false);
         }
     };
 

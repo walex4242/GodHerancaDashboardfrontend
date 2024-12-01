@@ -1,6 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLogin } from "../context/LoginContext";
 import Image from "next/image";
+import mapboxgl from 'mapbox-gl';
+
+const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_API_KEY || '';
+mapboxgl.accessToken = mapboxToken;
 
 const ProfileClient = () => {
     const { user, updateUser, updateProfilePicture } = useLogin();
@@ -14,7 +18,11 @@ const ProfileClient = () => {
         id: ''
     });
     const [file, setFile] = useState<File | null>(null);
-    const [isEditing, setIsEditing] = useState(false); // State to track edit mode
+    const [isEditing, setIsEditing] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [manualAddress, setManualAddress] = useState<string>('');
+    const [suggestions, setSuggestions] = useState<string[]>([]);
 
     useEffect(() => {
         if (user) {
@@ -22,21 +30,54 @@ const ProfileClient = () => {
                 username: user.username || '',
                 email: user.email || '',
                 profilePicture: user.profilePicture || '',
-                address: user.address.join('') || '',
+                address: Array.isArray(user.address) ? user.address.join(', ') : user.address || '',
                 phone: user.phone || '',
                 profile: user.profile || '',
-                id: user._id || ''
+                id: user._id || '',
             });
-            setFile(null);
         }
     }, [user]);
 
+    useEffect(() => {
+        if (manualAddress) {
+            fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(manualAddress)}.json?access_token=${mapboxToken}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.features) {
+                        const newSuggestions = data.features.map((feature: any) => feature.place_name);
+                        setSuggestions(newSuggestions);
+                    }
+                })
+                .catch(() => {
+                    setSuggestions([]);
+                });
+        } else {
+            setSuggestions([]);
+        }
+    }, [manualAddress, mapboxToken]);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
+
+        if (name in formData) {
+            setFormData(prevState => ({
+                ...prevState,
+                [name as keyof typeof formData]: value,
+            }));
+        }
+
+        if (name === 'address') {
+            setManualAddress(value);
+        }
+    };
+
+    const handleSuggestionClick = (suggestion: string) => {
+        setManualAddress(suggestion);
         setFormData(prevState => ({
             ...prevState,
-            [name]: value
+            address: suggestion,
         }));
+        setSuggestions([]);
     };
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,50 +85,52 @@ const ProfileClient = () => {
         setFile(selectedFile);
 
         if (selectedFile) {
-            const fileUrl = URL.createObjectURL(selectedFile);
-            setFormData(prevState => ({
-                ...prevState,
-                profilePicture: fileUrl
-            }));
-
             try {
+                setLoading(true);
                 await updateProfilePicture(selectedFile);
             } catch (error) {
                 console.error('Failed to update profile picture:', error);
+                setError('Profile picture update failed.');
+            } finally {
+                setLoading(false);
             }
         }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError('');
+
+        if (!formData.email || !formData.username) {
+            setError('Username and email are required');
+            return;
+        }
 
         if (user) {
             try {
+                setLoading(true);
                 const data = new FormData();
-                data.append('username', formData.username);
-                data.append('email', formData.email);
-                data.append('address', formData.address);
-                data.append('phone', formData.phone);
-                data.append('profile', formData.profile);
+                Object.entries(formData).forEach(([key, value]) => {
+                    data.append(key, value);
+                });
 
                 await updateUser(data);
-                setIsEditing(false); // Close edit mode after successful save
+                setIsEditing(false);
             } catch (error) {
                 console.error('Failed to update profile:', error);
+                setError('Profile update failed.');
+            } finally {
+                setLoading(false);
             }
         }
     };
 
-    if (!user) return <div>No user data available.</div>;
-
     return (
-        <div className="flex flex-col md:flex-row items-center md:items-start gap-8 p-4 w-full h-full border rounded-lg shadow-md light">
+        <div className="flex flex-col md:flex-row items-center md:items-start gap-8 p-4 w-full h-full border rounded-lg shadow-md">
             <div className="relative w-40 h-40 md:w-60 md:h-60">
                 {formData.profilePicture ? (
                     <img
                         src={formData.profilePicture}
-                        width={70}
-                        height={70}
                         alt="Profile"
                         className="rounded-full w-full h-full object-cover cursor-pointer"
                         onClick={() => document.getElementById('fileInput')?.click()}
@@ -111,85 +154,73 @@ const ProfileClient = () => {
             </div>
 
             <div className="flex flex-col w-full md:w-2/3 gap-4">
+                {loading && <div className="text-blue-500">Updating...</div>}
+                {error && <div className="text-red-500">{error}</div>}
+
                 {isEditing ? (
                     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                        <label>
-                            Username
-                            <input
-                                type="text"
-                                name="username"
-                                value={formData.username}
-                                onChange={handleChange}
-                                className="border p-2 rounded w-full"
-                                placeholder="Username"
-                            />
-                        </label>
-                        <label>
-                            Email
-                            <input
-                                type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                                className="border p-2 rounded w-full"
-                                placeholder="Email"
-                            />
-                        </label>
-                        <label>
-                            Address
-                            <input
-                                type="text"
-                                name="address"
-                                value={formData.address}
-                                onChange={handleChange}
-                                className="border p-2 rounded w-full"
-                                placeholder="Address"
-                            />
-                        </label>
-                        <label>
-                            Phone
-                            <input
-                                type="text"
-                                name="phone"
-                                value={formData.phone}
-                                onChange={handleChange}
-                                className="border p-2 rounded w-full"
-                                placeholder="Phone"
-                            />
-                        </label>
-                        <label>
-                            Profile
-                            <textarea
-                                name="profile"
-                                value={formData.profile}
-                                onChange={handleChange}
-                                className="border p-2 rounded w-full"
-                                placeholder="Profile"
-                            />
-                        </label>
-                        <div className="flex gap-4">
-                            <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded w-full md:w-auto">
-                                Save Changes
-                            </button>
-                            <button type="button" onClick={() => setIsEditing(false)} className="px-4 py-2 bg-gray-300 rounded w-full md:w-auto">
-                                Cancel
-                            </button>
-                        </div>
+                        {/* Input Fields */}
+                        {(['username', 'email', 'address', 'phone', 'profile'] as const).map((field) => (
+                            <label key={field}>
+                                {field.charAt(0).toUpperCase() + field.slice(1)}
+                                {field === 'address' ? (
+                                    <div id="addressInput" className="w-full">
+                                        <input
+                                            type="text"
+                                            name={field}
+                                            value={manualAddress} // Bind manualAddress state
+                                            onChange={handleChange} // Update both manualAddress and formData.address
+                                            className="border p-2 rounded w-full"
+                                            placeholder="Enter your address"
+                                        />
+                                        {suggestions.length > 0 && (
+                                            <ul className="border border-gray-300 mt-1 p-2 bg-white">
+                                                {suggestions.map((suggestion, index) => (
+                                                    <li
+                                                        key={index}
+                                                        className="cursor-pointer hover:bg-gray-200 p-1"
+                                                        onClick={() => handleSuggestionClick(suggestion)}
+                                                    >
+                                                        {suggestion}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <input
+                                            type={field === 'email' ? 'email' : 'text'}
+                                            name={field}
+                                            value={formData[field as keyof typeof formData]} // Type-safe access
+                                            onChange={handleChange}
+                                            className="border p-2 rounded w-full"
+                                            placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                                        />
+                                )}
+                            </label>
+                        ))}
+
+                        <button
+                            type="submit"
+                            className="bg-blue-500 text-white p-2 rounded mt-4"
+                        >
+                            Save Changes
+                        </button>
                     </form>
                 ) : (
-                    <div className="flex flex-col gap-4">
-                        <div className="text-2xl font-bold">{user.username}</div>
-                        <div className="text-md">{user.email}</div>
-                        <div className="text-md">{user.address}</div>
-                        <div className="text-md">{user.phone}</div>
-                        <div className="text-md">{user.profile}</div>
-                        <button
-                            onClick={() => setIsEditing(true)}
-                            className="mt-4 px-4 py-2 bg-gray-500 text-white hover:bg-black-400 rounded w-full md:w-auto"
-                        >
-                            Edit Profile
-                        </button>
-                    </div>
+                        <div className="flex flex-col gap-2">
+                            <div><strong>Username:</strong> {formData.username}</div>
+                            <div><strong>Email:</strong> {formData.email}</div>
+                            <div><strong>Address:</strong> {formData.address}</div>
+                            <div><strong>Phone:</strong> {formData.phone}</div>
+                            <div><strong>Profile:</strong> {formData.profile}</div>
+                            <button
+                                onClick={() => setIsEditing(true)}
+                                className="mt-4 px-4 py-2 bg-gray-500 text-white hover:bg-black rounded"
+                            >
+                                Edit Profile
+                            </button>
+                        </div>
                 )}
             </div>
         </div>

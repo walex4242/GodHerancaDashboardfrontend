@@ -1,20 +1,16 @@
-"use client"
+"use client";
 import { useRouter } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
-import { useLogin } from '../context/LoginContext';
-import { useDispatch } from 'react-redux';
-import { setUser, setToken, clearUser, clearToken } from '../state/authSlice';
+import { useLogin, User } from '../context/LoginContext';
 import Link from 'next/link';
-
 
 const Login = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [error, setError] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
-    const { login } = useLogin();
+    const { login, setUser, user } = useLogin(); // Destructure setUser and user
     const router = useRouter();
-    const dispatch = useDispatch();
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const validateEmail = (email: string): boolean => {
@@ -28,8 +24,7 @@ const Login = () => {
                 clearTimeout(timeoutRef.current);
             }
             timeoutRef.current = setTimeout(() => {
-                dispatch(clearUser());
-                dispatch(clearToken());
+                setUser(null); // Reset user on timeout
                 router.push('/login');
             }, 15 * 60 * 1000);
         };
@@ -45,7 +40,7 @@ const Login = () => {
             window.removeEventListener('keydown', handleUserActivity);
             clearTimeout(timeoutRef.current!);
         };
-    }, [dispatch, router]);
+    }, [setUser, router]);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -53,39 +48,11 @@ const Login = () => {
         setError('');
 
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                },
-                credentials: 'include',
-                body: JSON.stringify({ email, password }),
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                if (response.status === 401) {
-                    throw new Error('Invalid email or password');
-                } else {
-                    throw new Error(errorData.message || 'Login failed');
-                }
-            }
-
-            const data = await response.json();
-
             await login(email, password);
-            dispatch(setUser(data.user));
-            dispatch(setToken(data.token));
-
-            if (timeoutRef.current) {
-                clearTimeout(timeoutRef.current);
-            }
-
-            router.push('/inventory');
-        } catch (err: any) {
-            console.error(err);
-            setError(err.message || 'An error occurred during login');
+            router.push('/inventory'); // Redirect after login
+        } catch (err) {
+            console.error('Login failed:', err);
+            setError('Invalid credentials. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -93,6 +60,12 @@ const Login = () => {
 
     const isFormValid = validateEmail(email) && password.length > 0;
     const isEmailValid = validateEmail(email);
+
+    useEffect(() => {
+        if (user) {
+            console.log('User data after login:', user);
+        }
+    }, [user]); // Logs user data whenever it changes
 
     return (
         <div className="flex justify-center items-start min-h-screen bg-white light">

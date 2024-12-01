@@ -76,7 +76,8 @@ const CategoriesPage = () => {
             if (editingCategory) {
                 await updateCategory(editingCategory._id, formData);
             } else {
-                await createCategory(formData);
+                // Pass parentCategoryId (category.parentCategory) along with formData to createCategory
+                await createCategory(formData, category.parentCategory);
             }
 
             await fetchCategories(); // Refresh categories after creation or update
@@ -90,7 +91,6 @@ const CategoriesPage = () => {
             setLoading(false);
         }
     };
-
 
     const handleCancel = () => {
         setIsFormOpen(false);

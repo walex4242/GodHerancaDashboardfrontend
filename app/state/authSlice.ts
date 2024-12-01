@@ -5,10 +5,22 @@ interface User {
   _id: string;
   username: string;
   email: string;
-  address?: string[];
-  phone?: string;
   profile?: string;
-  profilePicture?: string;
+  address: string | string[] | undefined;
+  phone: string;
+  supermarketId?: string;
+  userType: string;
+  profilePicture: string;
+  isVerified: boolean;
+  uid: string;
+  authentication: {
+    password: string;
+    sessionToken?: string; // Optional
+    salt?: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+  __v?: number; // Optional
 }
 
 interface AuthState {

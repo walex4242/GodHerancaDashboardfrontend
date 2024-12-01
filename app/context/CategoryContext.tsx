@@ -31,31 +31,20 @@ export const CategoryProvider: React.FC<{ children: ReactNode }> = ({ children }
     const { supermarketId } = useSupermarket();
 
     const fetchCategories = async () => {
-        if (!isAuthenticated || !user || !supermarketId) return; // Prevent fetching if required data is not available
+        if (!isAuthenticated || !supermarketId) return;
         setLoading(true);
         setError(null);
         try {
-            const response = await axios.get<Category[]>(`${process.env.NEXT_PUBLIC_API_URL}/supermarket/${supermarketId}/categories`, {
-                headers: {
-                    'Authorization': `Bearer ${user?._id}`,
-                    'Accept': 'application/json',
-                },
-                withCredentials: true
-            });
-            setCategories(response.data);  // Update categories state
+            const response = await axios.get<Category[]>(
+                `${process.env.NEXT_PUBLIC_API_URL}/supermarket/${supermarketId}/categories`,
+                { withCredentials: true }
+            );
+            setCategories(response.data);
         } catch (error) {
             console.error('Error fetching categories:', error);
-            if (isAxiosError(error)) {
-                if (error.response?.status === 404) {
-                    setError('No categories found for this supermarket.');
-                } else {
-                    setError('Failed to fetch categories. Please try again later.');
-                }
-            } else {
-                setError('An unknown error occurred. Please try again later.');
-            }
+            setError('Failed to fetch categories. Please try again later.');
         } finally {
-            setLoading(false);  // Ensure loading is set to false in finally block
+            setLoading(false);
         }
     };
 
@@ -74,57 +63,59 @@ export const CategoryProvider: React.FC<{ children: ReactNode }> = ({ children }
     }, [isAuthenticated, supermarketId]);
 
     const createCategory = async (formData: FormData, parentCategoryId?: string) => {
-        if (!isAuthenticated || !user || !supermarketId) {
-            throw new Error('User is not authenticated or supermarketId is missing');
-        }
-
-        setLoading(true);  // Set loading to true before making the API call
-
         try {
-            formData.append('supermarketId', supermarketId);
+            // Append parentCategoryId to formData if it's provided
             if (parentCategoryId) {
                 formData.append('parentCategory', parentCategoryId);
             }
 
-            await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/category/${supermarketId}`, formData, {
+            // Ensure user has supermarketId and append it to formData
+            if (user?.supermarketId) {
+                formData.append('supermarketId', user.supermarketId); // Use user's supermarketId
+            }
+
+            // Send the request to the backend
+            const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/category/${user?._id}`;
+            const response = await axios.post(apiUrl, formData, {
                 headers: {
-                    'Authorization': `Bearer ${user._id}`,
-                    'Content-Type': 'multipart/form-data',
-                    'Accept': 'application/json',
+                    'Content-Type': 'multipart/form-data', // Change to 'multipart/form-data' for sending FormData
+                    'Accept': 'application/json', // Accept JSON response
                 },
-                withCredentials: true
+                withCredentials: true, // Send cookies along with the request if needed
             });
-            await fetchCategories();  // Fetch updated categories
+
+            // Handle the successful creation of the category
+            console.log('Category created:', response.data);
+            return response.data;
         } catch (error) {
             console.error('Error creating category:', error);
-            setError('Failed to create category. Please try again.');
-        } finally {
-            setLoading(false);  // Reset loading state in finally block
+            throw error; // Re-throw the error so it can be handled elsewhere if needed
         }
     };
-
+    
     const updateCategory = async (id: string, formData: FormData) => {
-        if (!isAuthenticated || !user) {
-            throw new Error('User is not authenticated');
+        if (!isAuthenticated) {
+            setError('User is not authenticated');
+            return;
         }
 
-        setLoading(true);  // Set loading to true before making the API call
+        setLoading(true); // Set loading state before making the API call
 
         try {
             await axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/category/${id}`, formData, {
                 headers: {
-                    'Authorization': `Bearer ${user._id}`,
                     'Content-Type': 'multipart/form-data',
                     'Accept': 'application/json',
                 },
-                withCredentials: true
+                withCredentials: true, // Ensure cookies (JWT) are sent
             });
-            await fetchCategories();  // Fetch updated categories
+
+            await fetchCategories(); // Refresh categories after successful update
         } catch (error) {
             console.error('Error updating category:', error);
             setError('Failed to update category. Please try again.');
         } finally {
-            setLoading(false);  // Reset loading state in finally block
+            setLoading(false); // Reset loading state after API call
         }
     };
 
@@ -134,25 +125,38 @@ export const CategoryProvider: React.FC<{ children: ReactNode }> = ({ children }
             return;
         }
 
-        setLoading(true);  // Set loading to true before making the API call
+        setLoading(true); // Set loading state before making the API call
 
         try {
+
             await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/category/${id}`, {
                 headers: {
-                    'Authorization': `Bearer ${user._id}`,
-                    'Accept': 'application/json',
+                    'Accept': 'application/json', // Accept JSON response
                 },
-                withCredentials: true
+                withCredentials: true, // Ensure cookies (JWT) are sent
             });
 
-            await fetchCategories();  // Fetch updated categories
+            await fetchCategories(); // Refresh categories after successful deletion
         } catch (error) {
-            console.error('Error deleting category:', error);
-            setError('Failed to delete category. Please try again.');
+            if (axios.isAxiosError(error)) {
+                // Axios error handling
+                console.error('Error deleting category:', error.response?.data);
+                if (error.response?.status === 403) {
+                    setError('You do not have permission to delete this category.');
+                } else {
+                    setError('Failed to delete category. Please try again.');
+                }
+            } else {
+                // Generic error handling
+                console.error('Unexpected error:', error);
+                setError('An unexpected error occurred. Please try again.');
+            }
         } finally {
-            setLoading(false);  // Reset loading state in finally block
+            setLoading(false); // Reset loading state after API call
         }
     };
+
+
 
     return (
         <CategoryContext.Provider value={{ categories, fetchCategories, createCategory, updateCategory, deleteCategory }}>
