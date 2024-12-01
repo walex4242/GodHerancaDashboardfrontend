@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { useItem } from './ItemContext';
+import { Item, useItem } from './ItemContext';
 import { useDispatch } from 'react-redux';
 import { clearUser } from '../state/authSlice';
 
@@ -43,8 +43,8 @@ const LoginContext = createContext<LoginContextType | null>(null);
 export const LoginProvider = ({ children }: { children: ReactNode }) => {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const [user, setUser] = useState<User | null>(null);
-    const { clearItems, fetchItemsBySupermarket } = useItem();
     const dispatch = useDispatch();
+    const [items, setItems] = useState<Item[]>([]);
 
     // Function for logging in a user
     const login = async (email: string, password: string) => {
@@ -75,6 +75,13 @@ export const LoginProvider = ({ children }: { children: ReactNode }) => {
             console.error('Failed to login:', error);
             throw error;
         }
+    };
+
+    const clearItems = () => {
+        setItems([]); // Clear items
+        setTimeout(() => {
+            setItems([]); // Ensure double clearing in case of async issues
+        }, 0);
     };
 
     // Function for logging out a user
