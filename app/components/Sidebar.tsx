@@ -112,31 +112,31 @@ const Sidebar = ({
                         <SidebarLink
                             href="/inventory"
                             icon={Archive}
-                            label="Inventory"
+                            label="Inventário"
                             isCollapsed={isSidebarCollapsed}
                         />
                         <SidebarLink
                             href="/category"
                             icon={ChartColumnStacked}
-                            label="Category"
+                            label="Categoria"
                             isCollapsed={isSidebarCollapsed}
                         />
                         <SidebarLink
                             href="/products"
                             icon={Clipboard}
-                            label="Products"
+                            label="Produtos"
                             isCollapsed={isSidebarCollapsed}
                         />
                         <SidebarLink
                             href="/profile"
                             icon={User}
-                            label="Profile"
+                            label="Perfil"
                             isCollapsed={isSidebarCollapsed}
                         />
                         <SidebarLink
                             href="/settings"
                             icon={SlidersHorizontal}
-                            label="Settings"
+                            label="Configurações"
                             isCollapsed={isSidebarCollapsed}
                         />
                     </div>

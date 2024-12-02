@@ -123,10 +123,10 @@ const Settings = () => {
                                         </label>
                                     ) : setting.type === "password" ? (
                                         <button
-                                            className="text-blue-500"
+                                            className="text-white bg-gray-400 hover:bg-black rounded-lg p-2"
                                             onClick={() => setIsModalOpen(true)}
                                         >
-                                            {t('changeYourPassword')}
+                                            {t('Change Your Password')}
                                         </button>
                                     ) : (
                                         <input

@@ -1,7 +1,4 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { Item, useItem } from './ItemContext';
-import { useDispatch } from 'react-redux';
-import { clearUser } from '../state/authSlice';
 
 // Define the shape of the user data
 export interface User {
@@ -33,7 +30,6 @@ interface LoginContextType {
     updatePassword: (currentPassword: string, newPassword: string) => Promise<{ success: boolean; message: string }>;
     updateProfilePicture: (picture: File) => Promise<void>;
     login: (email: string, password: string) => Promise<void>;
-    logout: () => void;
     setUser: React.Dispatch<React.SetStateAction<User | null>>; // Added setUser to context
     supermarketId: string | null;
 }
@@ -43,8 +39,6 @@ const LoginContext = createContext<LoginContextType | null>(null);
 export const LoginProvider = ({ children }: { children: ReactNode }) => {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const [user, setUser] = useState<User | null>(null);
-    const dispatch = useDispatch();
-    const [items, setItems] = useState<Item[]>([]);
 
     // Function for logging in a user
     const login = async (email: string, password: string) => {
@@ -74,32 +68,6 @@ export const LoginProvider = ({ children }: { children: ReactNode }) => {
         } catch (error) {
             console.error('Failed to login:', error);
             throw error;
-        }
-    };
-
-    const clearItems = () => {
-        setItems([]); // Clear items
-        setTimeout(() => {
-            setItems([]); // Ensure double clearing in case of async issues
-        }, 0);
-    };
-
-    // Function for logging out a user
-    const logout = () => {
-        try {
-            clearItems(); // Clear items from context
-            dispatch(clearUser()); // Clear user from Redux
-
-            // Clear cookie and localStorage token if used
-            document.cookie = 'token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 UTC;';
-            localStorage.removeItem('token');
-
-            // Reset authentication state
-            setIsAuthenticated(false);
-            setUser(null);
-
-        } catch (err) {
-            console.error('Logout error:', err);
         }
     };
 
@@ -237,7 +205,6 @@ export const LoginProvider = ({ children }: { children: ReactNode }) => {
             isAuthenticated,
             user,
             login,
-            logout,
             updateUser,
             updatePassword,
             updateProfilePicture,

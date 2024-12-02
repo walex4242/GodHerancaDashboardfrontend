@@ -18,7 +18,7 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
     );
 
     const [isMounted, setIsMounted] = useState(false);
-    const { isAuthenticated, logout, user } = useLogin();
+    const { isAuthenticated, user } = useLogin();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     useEffect(() => {
@@ -35,6 +35,18 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
 
     const closeDropdown = () => {
         setIsDropdownOpen(false);
+    };
+
+    const [isLoggedIn, setIsLoggedIn] = useState(true);
+
+    const handleLogout = () => {
+        // Your logout logic here
+        setIsLoggedIn(false); // Change state to simulate logging out
+    };
+
+    const handleLogin = () => {
+        // Your login logic here
+        setIsLoggedIn(true); // Change state to simulate logging in
     };
 
     if (!isMounted) return null;
@@ -86,21 +98,50 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
                                 <>
                                     <Link
                                         href="/profile"
-                                        className="block px-4 py-2 text-sm text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                                        className="flex items-center gap-2 px-4 py-3 text-sm text-white bg-gray-500 hover:bg-gray-700 rounded-md text-center transition-all duration-200 ease-in-out"
                                         onClick={closeDropdown}
                                     >
-                                        View Profile
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                            className="w-5 h-5"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth="2"
+                                                d="M5.121 17.804A4.992 4.992 0 015 15c0-1.657 1.343-3 3-3s3 1.343 3 3a4.992 4.992 0 01-.121.804M19 20c0 1.656-1.343 3-3 3s-3-1.344-3-3 1.343-3 3-3 3 1.344 3 3z"
+                                            />
+                                        </svg>
+                                        Ver Perfil
                                     </Link>
-                                    <button
-                                        onClick={() => {
-                                            logout();
-                                            closeDropdown();
-                                        }}
-                                        className="block w-full text-left px-4 py-2 text-sm text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+
+                                    <Link
+                                        href="/logout"
+                                        onClick={closeDropdown}
+                                        className="flex items-center gap-2 px-4 py-3 text-sm text-gray-800 bg-white hover:bg-gray-100 rounded-md transition-all duration-200 ease-in-out"
                                     >
-                                        Logout
-                                    </button>
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                            className="w-5 h-5"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth="2"
+                                                d="M17 16l4-4m0 0l-4-4m4 4H7"
+                                            />
+                                        </svg>
+                                        Sair
+                                    </Link>
                                 </>
+
+
                             ) : (
                                 <>
                                     <Link

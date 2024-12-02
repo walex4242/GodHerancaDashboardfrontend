@@ -125,6 +125,11 @@ const ProfileClient = () => {
         }
     };
 
+    const handleCancel = () => {
+        setFormData(formData); // Revert to original data
+        setIsEditing(false);
+    };
+
     return (
         <div className="flex flex-col md:flex-row items-center md:items-start gap-8 p-4 w-full h-full border rounded-lg shadow-md">
             <div className="relative w-40 h-40 md:w-60 md:h-60">
@@ -200,12 +205,21 @@ const ProfileClient = () => {
                             </label>
                         ))}
 
-                        <button
-                            type="submit"
-                            className="bg-blue-500 text-white p-2 rounded mt-4"
-                        >
-                            Save Changes
-                        </button>
+                        <div className="flex gap-4">
+                            <button
+                                type="submit"
+                                className="bg-gray-500 hover:bg-black text-white p-2 rounded"
+                            >
+                                Save Changes
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleCancel}
+                                className="bg-gray-500 hover:bg-black text-white p-2 rounded"
+                            >
+                                Cancel
+                            </button>
+                        </div>
                     </form>
                 ) : (
                         <div className="flex flex-col gap-2">
