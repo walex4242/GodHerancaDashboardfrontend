@@ -1,3 +1,4 @@
+"use client"
 import Image from 'next/image';
 import { useLogin } from '../context/LoginContext'; // Adjust the import path accordingly
 
