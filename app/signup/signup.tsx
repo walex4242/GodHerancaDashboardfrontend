@@ -16,7 +16,7 @@ interface SignupFormInputs {
     confirmPassword: string;
     address: string;
     phone: string;
-    userType: 'Admin' | 'Driver' | 'Supermarket' | 'Client' | 'Picker';
+    userType: 'Supermarket' ;
     profile: string;
 }
 // Define the validation schema
@@ -35,8 +35,8 @@ const validationSchema = Yup.object().shape({
         .required('Confirm Password is required'),
     address: Yup.string().required("Address is required"),
     phone: Yup.string().required("Phone is required"),
-    userType: Yup.mixed<'Admin' | 'Driver' | 'Supermarket' | 'Client' | 'Picker'>()
-        .oneOf(['Admin', 'Driver', 'Supermarket', 'Client', 'Picker'], "Invalid user type")
+    userType: Yup.mixed<'Supermarket'>()
+        .oneOf([ 'Supermarket'], "Invalid user type")
         .required("User Type is required"),
     profile: Yup.string().required("Profile is required"),
 });
@@ -127,7 +127,7 @@ const Signup = () => {
                 {success && <p className="text-green-500 text-sm text-center mb-4">{success}</p>}
                 <form onSubmit={handleSubmit(onSubmit)} method="post">
                     <div className="mb-4">
-                        <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username:</label>
+                        <label htmlFor="username" className="block text-sm font-medium text-gray-700">Nome de usuário:</label>
                         <input
                             type="text"
                             id="username"
@@ -147,7 +147,7 @@ const Signup = () => {
                         {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
                     </div>
                     <div className="mb-4">
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password:</label>
+                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">Senha:</label>
                         <input
                             type="password"
                             id="password"
@@ -157,7 +157,7 @@ const Signup = () => {
                         {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
                     </div>
                     <div className="mb-4">
-                        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">Confirm Password:</label>
+                        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">Confirme sua senha:</label>
                         <input
                             type="password"
                             id="confirmPassword"
@@ -167,7 +167,7 @@ const Signup = () => {
                         {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword.message}</p>}
                     </div>
                     <div className="relative mb-4">
-                        <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address:</label>
+                        <label htmlFor="address" className="block text-sm font-medium text-gray-700">Endereço:</label>
                         <input
                             type="text"
                             id="address"
@@ -207,7 +207,7 @@ const Signup = () => {
 
 
                     <div className="mb-4">
-                        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone:</label>
+                        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Telefone:</label>
                         <input
                             type="text"
                             id="phone"
@@ -217,23 +217,19 @@ const Signup = () => {
                         {errors.phone && <p className="text-red-500 text-sm">{errors.phone.message}</p>}
                     </div>
                     <div className="mb-4">
-                        <label htmlFor="userType" className="block text-sm font-medium text-gray-700">User Type:</label>
+                        <label htmlFor="userType" className="block text-sm font-medium text-gray-700">Tipo de usuário:</label>
                         <select
                             id="userType"
                             {...register('userType')}
                             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                         >
                             <option value="">Select a type</option>
-                            <option value="Admin">Admin</option>
-                            <option value="Driver">Driver</option>
                             <option value="Supermarket">Supermarket</option>
-                            <option value="Client">Client</option>
-                            <option value="Picker">Picker</option>
                         </select>
                         {errors.userType && <p className="text-red-500 text-sm">{errors.userType.message}</p>}
                     </div>
                     <div className="mb-4">
-                        <label htmlFor="profile" className="block text-sm font-medium text-gray-700">Profile:</label>
+                        <label htmlFor="profile" className="block text-sm font-medium text-gray-700">Nome do supermercado:</label>
                         <input
                             type="text"
                             id="profile"
@@ -251,7 +247,7 @@ const Signup = () => {
                     </button>
                 </form>
                 <p className="mt-4 text-center text-sm text-gray-600">
-                    Already have an account?
+                    Já tem uma conta?
                     <Link href="/login" className="text-blue-600 hover:text-blue-800"> Log in</Link>
                 </p>
             </div>
