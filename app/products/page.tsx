@@ -100,7 +100,7 @@ const Products = () => {
                         setIsModalOpen(true);
                     }}
                 >
-                    <PlusCircleIcon className="w-5 h-5 mr-2" /> Create Product
+                    <PlusCircleIcon className="w-5 h-5 mr-2" /> Criar produto
                 </button>
             </div>
 
