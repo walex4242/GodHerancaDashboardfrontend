@@ -92,7 +92,7 @@ const Products = () => {
 
             {/* HEADER BAR */}
             <div className="flex flex-wrap justify-between items-center mb-6 px-2">
-                <h2 className="text-2xl font-bold text-gray-800 sm:text-3xl">Products</h2>
+                <h2 className="text-2xl font-bold text-gray-800 sm:text-3xl">Produtos</h2>
                 <button
                     className="mt-2 sm:mt-0 flex items-center bg-gray-300 hover:bg-black text-white font-bold py-2 px-4 rounded-lg text-sm sm:text-base"
                     onClick={() => {
@@ -107,7 +107,7 @@ const Products = () => {
             {/* BODY PRODUCTS LIST */}
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-2">
                 {filteredProducts.length === 0 ? (
-                    <div className="col-span-full text-center text-gray-500">No products found</div>
+                    <div className="col-span-full text-center text-gray-500">Nenhum produto encontrado</div>
                 ) : (
                     filteredProducts.map((product) => {
                         const isPromotionActive =
@@ -144,21 +144,21 @@ const Products = () => {
                                     <div className="text-sm text-gray-600 mb-2">
                                         {product.quantityOffers.map((offer, index) => (
                                             <div key={index}>
-                                                Offer: Buy {offer.quantity} or more for ${Number(offer.price).toFixed(2)} each
+                                                Oferta: Comprar {offer.quantity} ou mais para R${Number(offer.price).toFixed(2)} cada
                                             </div>
                                         ))}
                                     </div>
                                 )}
                                 <div className="text-sm text-gray-600 mb-2">
-                                    Stock: {product.stockQuantity || 'N/A'}
+                                    Estoque: {product.stockQuantity || 'N/A'}
                                 </div>
                                 <div className="text-sm text-gray-600 mb-2">
-                                    Weight: {product.weight} {product.unit}
+                                    Peso: {product.weight} {product.unit}
                                 </div>
                                 <div className="text-sm text-gray-600 mb-2">{product.description}</div>
                                 {product.promotionEnd && (
                                     <div className="text-sm text-gray-600 mb-4">
-                                        Promotion ends: {(new Date(product.promotionEnd)).toLocaleDateString()}
+                                        A promoção termina: {(new Date(product.promotionEnd)).toLocaleDateString()}
                                     </div>
                                 )}
                                 <div className="flex flex-col sm:flex-row sm:space-x-2 w-full">
@@ -166,13 +166,13 @@ const Products = () => {
                                         className="flex-1 flex items-center justify-center bg-gray-600 hover:bg-black text-white font-bold py-2 px-4 rounded-lg text-sm"
                                         onClick={() => handleEditProduct(product)}
                                     >
-                                        <EditIcon className="w-5 h-5 mr-2" /> Edit
+                                        <EditIcon className="w-5 h-5 mr-2" /> Editar
                                     </button>
                                     <button
                                         className="flex-1 flex items-center justify-center bg-gray-600 hover:bg-black text-white font-bold py-2 px-4 rounded-lg text-sm mt-2 sm:mt-0"
                                         onClick={() => handleDeleteProduct(product._id)}
                                     >
-                                        <Trash2Icon className="w-5 h-5 mr-2" /> Delete
+                                        <Trash2Icon className="w-5 h-5 mr-2" /> Excluir
                                     </button>
                                 </div>
                             </div>

@@ -57,7 +57,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-                <label className="block text-gray-700">Category Name</label>
+                <label className="block text-gray-700">Nome da categoria</label>
                 <input
                     type="text"
                     value={name}
@@ -68,7 +68,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
                 />
             </div>
             <div>
-                <label className="block text-gray-700">Upload Image</label>
+                <label className="block text-gray-700">Carregar imagem</label>
                 <input
                     type="file"
                     onChange={handleImageChange}
@@ -76,18 +76,18 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
                     accept="image/*"
                     disabled={loading} // Disable input while saving
                 />
-                {imageFile && <p className="mt-2 text-sm text-gray-600">Selected file: {imageFile.name}</p>}
+                {imageFile && <p className="mt-2 text-sm text-gray-600"> Arquivo selecionado: {imageFile.name}</p>}
             </div>
             {parentCategories.length > 0 && (
                 <div>
-                    <label className="block text-gray-700">Parent Category</label>
+                    <label className="block text-gray-700">Categoria pai</label>
                     <select
                         value={parentCategory}
                         onChange={(e) => setParentCategory(e.target.value)}
                         className="border p-2 w-full rounded-md"
                         disabled={loading} // Disable input while saving
                     >
-                        <option value="">None</option>
+                        <option value="">Nenhum</option>
                         {parentCategories.map(parent => (
                             <option key={parent._id} value={parent._id}>
                                 {parent.name}
@@ -110,7 +110,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
                     className="bg-gray-500 hover:bg-black text-white px-4 py-2 rounded-xl w-full sm:w-auto"
                     disabled={loading} // Disable cancel button while saving
                 >
-                    Cancel
+                    Cancelar
                 </button>
             </div>
         </form>

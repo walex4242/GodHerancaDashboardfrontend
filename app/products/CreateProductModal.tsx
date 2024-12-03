@@ -154,7 +154,7 @@ const CreateProductModal: React.FC<CreateProductModalProps> = ({ isOpen, onClose
                 <form onSubmit={handleSubmit}>
                     {/* Form Fields */}
                     <div className="mb-4">
-                        <label htmlFor="name" className="block text-gray-700 font-bold mb-2">Product Name</label>
+                        <label htmlFor="name" className="block text-gray-700 font-bold mb-2">Nome do produto</label>
                         <input
                             type="text"
                             id="name"
@@ -166,7 +166,7 @@ const CreateProductModal: React.FC<CreateProductModalProps> = ({ isOpen, onClose
                         />
                     </div>
                     <div className="mb-4">
-                        <label htmlFor="price" className="block text-gray-700 font-bold mb-2">Price</label>
+                        <label htmlFor="price" className="block text-gray-700 font-bold mb-2">Preço</label>
                         <input
                             type="number"
                             id="price"
@@ -178,7 +178,7 @@ const CreateProductModal: React.FC<CreateProductModalProps> = ({ isOpen, onClose
                         />
                     </div>
                     <div className="mb-4">
-                        <label htmlFor="description" className="block text-gray-700 font-bold mb-2">Description</label>
+                        <label htmlFor="description" className="block text-gray-700 font-bold mb-2">Descrição</label>
                         <textarea
                             id="description"
                             name="description"
@@ -189,7 +189,7 @@ const CreateProductModal: React.FC<CreateProductModalProps> = ({ isOpen, onClose
                         />
                     </div>
                     <div className="mb-4">
-                        <label htmlFor="weight" className="block text-gray-700 font-bold mb-2">Weight</label>
+                        <label htmlFor="weight" className="block text-gray-700 font-bold mb-2">Peso</label>
                         <input
                             type="number"
                             id="weight"
@@ -201,19 +201,23 @@ const CreateProductModal: React.FC<CreateProductModalProps> = ({ isOpen, onClose
                         />
                     </div>
                     <div className="mb-4">
-                        <label htmlFor="unit" className="block text-gray-700 font-bold mb-2">Unit</label>
-                        <input
-                            type="text"
+                        <label htmlFor="unit" className="block text-gray-700 font-bold mb-2">unidade</label>
+                        <select
                             id="unit"
                             name="unit"
                             value={productData.unit}
                             onChange={handleInputChange}
                             className="w-full p-2 border border-gray-300 rounded"
                             required
-                        />
+                        >
+                            <option value="">Selecione uma unidade</option>
+                            <option value="kg">Quilogramas (kg)</option>
+                            <option value="g">Gramas (g)</option>
+                            <option value="ltr">Litros (ltr)</option>
+                        </select>
                     </div>
                     <div className="mb-4">
-                        <label htmlFor="stockQuantity" className="block text-gray-700 font-bold mb-2">Stock Quantity</label>
+                        <label htmlFor="stockQuantity" className="block text-gray-700 font-bold mb-2">Quantidade de estoque</label>
                         <input
                             type="number"
                             id="stockQuantity"
@@ -225,18 +229,18 @@ const CreateProductModal: React.FC<CreateProductModalProps> = ({ isOpen, onClose
                         />
                     </div>
                     <div className="mb-4">
-                        <label htmlFor="discount" className="block text-gray-700 font-bold mb-2">Discount (%)</label>
+                        <label htmlFor="discount" className="block text-gray-700 font-bold mb-2">Desconto (%)</label>
                         <input
                             type="number"
                             id="discount"
                             name="discount"
-                            value={productData.discount || 0}
+                            value={productData.discount }
                             onChange={handleInputChange}
                             className="w-full p-2 border border-gray-300 rounded"
                         />
                     </div>
                     <div className="mb-4">
-                        <label htmlFor="promotionEnd" className="block text-gray-700 font-bold mb-2">Promotion End Date</label>
+                        <label htmlFor="promotionEnd" className="block text-gray-700 font-bold mb-2">Data de término da promoção</label>
                         <input
                             type="date"
                             id="promotionEnd"
@@ -247,7 +251,7 @@ const CreateProductModal: React.FC<CreateProductModalProps> = ({ isOpen, onClose
                         />
                     </div>
                     <div className="mb-4">
-                        <label htmlFor="category" className="block text-gray-700 font-bold mb-2">Category</label>
+                        <label htmlFor="category" className="block text-gray-700 font-bold mb-2">Categoria</label>
                         <select
                             id="category"
                             name="category"
@@ -256,7 +260,7 @@ const CreateProductModal: React.FC<CreateProductModalProps> = ({ isOpen, onClose
                             className="w-full p-2 border border-gray-300 rounded"
                             required
                         >
-                            <option value="">Select a category</option>
+                            <option value="">Selecione uma categoria</option>
                             {categories.map(category => (
                                 <option key={category._id} value={category._id}>
                                     {category.name}
@@ -277,7 +281,7 @@ const CreateProductModal: React.FC<CreateProductModalProps> = ({ isOpen, onClose
                         />
                     </div>
                     <div className="mb-4">
-                        <label htmlFor="image" className="block text-gray-700 font-bold mb-2">Image</label>
+                        <label htmlFor="image" className="block text-gray-700 font-bold mb-2">Imagem</label>
                         <input
                             type="file"
                             id="image"
@@ -287,7 +291,7 @@ const CreateProductModal: React.FC<CreateProductModalProps> = ({ isOpen, onClose
                         />
                     </div>
                     <div className="mb-4">
-                        <label className="block text-gray-700 font-bold mb-2">Quantity Offers</label>
+                        <label className="block text-gray-700 font-bold mb-2">Ofertas de quantidade</label>
                         {productData.quantityOffers?.map((offer, index) => (
                             <div key={index} className="flex flex-wrap sm:flex-nowrap items-center space-x-2 mb-2">
                                 <input
@@ -305,7 +309,7 @@ const CreateProductModal: React.FC<CreateProductModalProps> = ({ isOpen, onClose
                                     className="w-1/2 sm:w-1/3 p-2 border border-gray-300 rounded"
                                 />
                                 <button type="button" onClick={() => removeQuantityOffer(index)} className="text-red-500">
-                                    Remove
+                                    Remover
                                 </button>
                             </div>
                         ))}
@@ -317,12 +321,12 @@ const CreateProductModal: React.FC<CreateProductModalProps> = ({ isOpen, onClose
                             }))}
                             className="bg-gray-500 hover:bg-black text-white px-4 py-2 rounded"
                         >
-                            Add Quantity Offer
+                            Adicionar oferta de quantidade
                         </button>
                     </div>
                     <div className="flex justify-end space-x-4">
                         <button type="button" onClick={handleClose} className="bg-gray-500 hover:bg-black text-white px-4 py-2 rounded">
-                            Cancel
+                            Cancelar
                         </button>
                         <button type="submit" className="bg-gray-500 hover:bg-black text-white px-4 py-2 rounded">
                             {editingProduct ? "Update Product" : "Create Product"}

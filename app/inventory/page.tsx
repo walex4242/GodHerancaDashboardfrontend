@@ -114,7 +114,7 @@ const Inventory = () => {
                             deleteItem(row.original._id);
                         }}
                     >
-                        Delete
+                        Excluir
                     </button>
                 ),
                 width: 100,
@@ -161,13 +161,13 @@ const Inventory = () => {
     return (
         <div className="container mx-auto p-4 light">
             <div className="flex flex-wrap justify-between items-center mb-4">
-                <h1 className="text-xl sm:text-2xl font-bold">Inventory</h1>
+                <h1 className="text-xl sm:text-2xl font-bold">Inventário</h1>
                 <button
                     className="bg-black-300 text-white px-4 py-2 rounded text-sm sm:text-base"
                     onClick={handleDeleteSelected}
                     disabled={Object.keys(selectedRowIds).length === 0}
                 >
-                    Delete Selected
+                    Excluir selecionado
                 </button>
             </div>
             <div className="overflow-x-auto">

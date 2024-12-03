@@ -28,26 +28,26 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({ isOpen, onClo
         isOpen ? (
             <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
                 <div className="bg-white rounded-lg shadow-lg p-6 w-96">
-                    <h2 className="text-xl font-bold">Change Your Password</h2>
+                    <h2 className="text-xl font-bold">Altere sua senha</h2>
                     <div className="mt-4">
                         <input
                             type="password"
                             className="w-full px-4 py-2 border rounded-lg"
-                            placeholder="Enter Current Password"
+                            placeholder="Digite a senha atual"
                             value={currentPassword}
                             onChange={(e) => setCurrentPassword(e.target.value)}
                         />
                         <input
                             type="password"
                             className="w-full px-4 py-2 border rounded-lg mt-2"
-                            placeholder="Enter New Password"
+                            placeholder="Digite a nova senha"
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
                         />
                         <input
                             type="password"
                             className="w-full px-4 py-2 border rounded-lg mt-2"
-                            placeholder="Confirm New Password"
+                            placeholder="Confirme a nova senha"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                         />
@@ -58,13 +58,13 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({ isOpen, onClo
                             className="bg-gray-500 text-white px-4 py-2 rounded"
                             onClick={onClose}
                         >
-                            Cancel
+                            Cancelar
                         </button>
                         <button
                             className="bg-blue-500 text-white px-4 py-2 rounded"
                             onClick={handleSave}
                         >
-                            Save Changes
+                            Salvar alterações
                         </button>
                     </div>
                 </div>

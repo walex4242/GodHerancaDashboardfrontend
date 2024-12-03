@@ -140,13 +140,13 @@ const CategoriesPage = () => {
                     onClick={() => handleEdit(category)}
                     className="flex-1 flex items-center justify-center bg-gray-600 hover:bg-black text-white font-bold py-2 px-4 rounded-lg text-sm"
                 >
-                    <EditIcon className="w-5 h-5 mr-2" /> Edit
+                    <EditIcon className="w-5 h-5 mr-2" /> Editar
                 </button>
                 <button
                     onClick={() => handleDelete(category._id)}
                     className="flex-1 flex items-center justify-center bg-gray-600 hover:bg-black text-white font-bold py-2 px-4 rounded-lg text-sm mt-2 sm:mt-0"
                 >
-                    <Trash2Icon className="w-5 h-5 mr-2" /> Delete
+                    <Trash2Icon className="w-5 h-5 mr-2" /> Excluir
                 </button>
             </div>
         </div>
@@ -154,7 +154,7 @@ const CategoriesPage = () => {
 
     if (!isAuthenticated || !user) {
         return (
-            <p className='text-center justify-center text-black'> You do not have permission to view this page. </p>
+            <p className='text-center justify-center text-black'> Você não tem permissão para visualizar esta página. </p>
         )
     }
 
@@ -163,19 +163,19 @@ const CategoriesPage = () => {
             <div className="mb-6 flex justify-center">
                 <input
                     type="text"
-                    placeholder="Search categories..."
+                    placeholder="Categorias de pesquisa..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full sm:max-w-xs md:max-w-md py-2 px-4 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-black"
                 />
             </div>
             <div className="flex flex-wrap justify-between items-center mb-6 ">
-                <h2 className="text-2xl font-bold text-gray-800 sm:text-3xl">Categories</h2>
+                <h2 className="text-2xl font-bold text-gray-800 sm:text-3xl">Categorias</h2>
                 <button
                     onClick={handleCreate}
                     className="mt-2 sm:mt-0 flex items-center bg-gray-300 hover:bg-black text-white font-bold py-2 px-4 rounded-lg text-sm sm:text-base"
                 >
-                    <PlusCircleIcon className="w-5 h-5 mr-2" /> Create Category
+                    <PlusCircleIcon className="w-5 h-5 mr-2" /> Criar categoria
                 </button>
             </div>
             {loading && <p>Loading...</p>}

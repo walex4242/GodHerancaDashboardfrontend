@@ -85,7 +85,7 @@ const Settings = () => {
 
     if (!isAuthenticated || !user) {
         return (
-            <p className="text-center justify-center text-black">You do not have permission to view this page.</p>
+            <p className="text-center justify-center text-black">Você não tem permissão para visualizar esta página.</p>
         );
     }
 
