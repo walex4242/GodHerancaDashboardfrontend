@@ -211,9 +211,9 @@ const CreateProductModal: React.FC<CreateProductModalProps> = ({ isOpen, onClose
                             required
                         >
                             <option value="">Selecione uma unidade</option>
-                            <option value="kg">Quilogramas (kg)</option>
-                            <option value="g">Gramas (g)</option>
-                            <option value="ltr">Litros (ltr)</option>
+                            <option value="kg">kg</option>
+                            <option value="g">g</option>
+                            <option value="ltr">L</option>
                         </select>
                     </div>
                     <div className="mb-4">
