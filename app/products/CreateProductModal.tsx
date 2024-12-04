@@ -150,7 +150,7 @@ const CreateProductModal: React.FC<CreateProductModalProps> = ({ isOpen, onClose
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 light">
             <div className="bg-white p-6 sm:p-8 rounded shadow-lg w-full max-w-lg sm:max-w-md md:max-w-sm lg:max-w-md" style={{ maxHeight: '80vh', overflowY: 'auto' }}>
-                <h2 className="text-2xl font-bold mb-6">{editingProduct ? "Edit Product" : "Create Product"}</h2>
+                <h2 className="text-2xl font-bold mb-6">{editingProduct ? "Editar produto" : "Criar produto"}</h2>
                 <form onSubmit={handleSubmit}>
                     {/* Form Fields */}
                     <div className="mb-4">
