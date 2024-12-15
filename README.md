@@ -1,56 +1,139 @@
-# Godheranca Frontend Web
-# Project Description
-"GodHeranca" is a Next.js-based web app where users can add items to their cart, enter their information, and be redirected to WhatsApp to complete their order.
-# Features
-•	Feature 1: Supermarket can sign up and login.
-•	Feature 2: Supermarket can create a product and category.
-•	Feature 3: Supermarket can see their inventory .
-# Technologies Used
-•	React
-•	Redux 
-•	TypeScript 
-•	Axios 
-•	NextJs
-•	MapBox
-# Installation
-# Prerequisites
-Before you start, make sure you have the following installed on your machine:
-•	Node.js (version 20.16.0 or later)
-•	npm (version 10.8.1or later)
-•	Git (for cloning the repository)
-# Getting Started
-1.	Clone the repository:
-2.	git clone https://github.com/walex4242/GodHerancaDashboardfrontend.git
-3.	Navigate into the project directory:
-4.	cd GodHerancaDashboardfrontend
-5.	Create env.local : 
- NEXT_PUBLIC_GOOGLE_API_KEY=””
- NEXT_PUBLIC_MAPBOX_API_KEY=””
- NEXT_PUBLIC_API_URL='https://godherancabackend2-a7sse79m.b4a.run'
-6.	Install dependencies:
-7.	npm install
-8.	Start the development server:
-9.	npm run dev
-This will start the app on http://localhost:3000 (or another port if configured differently).
-Running in Production Mode
-# To build the app for production, run:
+# GodHeranca Dashboard Frontend
+
+## Project Description
+"GodHeranca" is a Next.js-based web application designed to empower supermarkets to manage their inventory and streamline their online presence. Supermarkets can create categories, add products, and monitor their inventory efficiently.
+
+---
+
+## Features
+
+1. **Supermarket Authentication**: Supermarkets can sign up, log in, and manage their accounts.
+2. **Product and Category Management**: Supermarkets can create and organize products and categories.
+3. **Inventory Management**: Supermarkets can view and manage their inventory seamlessly.
+4. **Product Discounts and Offers**: Supermarkets can add discounts and promotional offers to products.
+
+---
+
+## Technologies Used
+
+- React
+- Redux
+- TypeScript
+- Axios
+- Next.js
+- MapBox
+
+---
+
+## Installation
+
+### Prerequisites
+
+Ensure you have the following installed:
+
+- **Node.js** (version 20.16.0 or later)
+- **npm** (version 10.8.1 or later)
+- **Git** (for cloning the repository)
+
+### Getting Started
+
+1. **Clone the Repository:**
+
+   ```bash
+   git clone https://github.com/walex4242/GodHerancaDashboardfrontend.git
+   ```
+
+2. **Navigate into the Project Directory:**
+
+   ```bash
+   cd GodHerancaDashboardfrontend
+   ```
+
+3. **Set Up Environment Variables:**
+
+   Create a `.env.local` file in the project root and add the following keys:
+
+   ```env
+   NEXT_PUBLIC_GOOGLE_API_KEY=""
+   NEXT_PUBLIC_MAPBOX_API_KEY=""
+   NEXT_PUBLIC_API_URL='https://godherancabackend2-a7sse79m.b4a.run'
+   ```
+
+4. **Install Dependencies:**
+
+   ```bash
+   npm install
+   ```
+
+5. **Start the Development Server:**
+
+   ```bash
+   npm run dev
+   ```
+
+   The application will start at [http://localhost:3000](http://localhost:3000) (or another port if configured differently).
+
+### Running in Production Mode
+
+To build the application for production:
+
+```bash
 npm run build
-This will create a build folder with the optimized production build.
-# Usage
-•	"Supermarket can create account, sign in and sing out ."
-•	"Supermarket can create products and categories "
-•	"When creating product, supermarket can add discount and offers "
-# Contributing
-We welcome contributions to the project! If you'd like to contribute, follow these steps:
-1.	Fork the repository.
-2.	Create a new branch (git checkout -b feature-branch).
-3.	Make your changes and commit them (git commit -am 'Add new feature').
-4.	Push to the branch (git push origin feature-branch).
-5.	Open a pull request.
-# License
-This project is licensed under the MIT License - see the LICENSE file for details.
-# Acknowledgments
-Name: Olawale Olafisoye || 
-Contact: walex.world20@gmail.com
-________________________________________
+```
+
+This will generate an optimized production build in the `build` folder.
+
+---
+
+## Usage
+
+- Supermarkets can **create accounts, sign in, and sign out** securely.
+- Create and manage **products** and **categories** effectively.
+- Add **discounts and offers** to products to attract customers.
+- View and monitor your **inventory** to stay on top of stock levels.
+
+---
+
+## Contributing
+
+Contributions are welcome! To contribute:
+
+1. **Fork the Repository:**
+
+   Click the "Fork" button on the repository page to create a copy under your account.
+
+2. **Create a New Branch:**
+
+   ```bash
+   git checkout -b feature-branch
+   ```
+
+3. **Make Changes and Commit:**
+
+   ```bash
+   git commit -am 'Add new feature'
+   ```
+
+4. **Push to Your Branch:**
+
+   ```bash
+   git push origin feature-branch
+   ```
+
+5. **Submit a Pull Request:**
+
+   Open a pull request on the original repository to merge your changes.
+
+---
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## Acknowledgments
+
+- **Name**: Olawale Olafisoye
+- **Contact**: [walex.world20@gmail.com](mailto:walex.world20@gmail.com)
 
